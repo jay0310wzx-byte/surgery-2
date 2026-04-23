@@ -1,0 +1,4172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>临床医学外科学教学辅助智能体 · 数智化外科教学平台</title>
+<style>
+/* ============ 全局变量与重置 ============ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --primary: #1565c0;
+  --primary-dark: #0a3d80;
+  --primary-light: #e7f1fc;
+  --primary-lighter: #f3f8fe;
+  --accent: #00838f;
+  --accent-light: #e0f4f6;
+  --teal: #00a3b4;
+  --success: #2e7d32;
+  --success-light: #e8f5e9;
+  --warning: #ef6c00;
+  --warning-light: #fff3e0;
+  --danger: #c62828;
+  --danger-light: #ffebee;
+  --info: #0277bd;
+--bg: #f1f5fa;
+--bg-deep: #e8eef7;
+--surface: #ffffff;
+--surface-soft: #f9fbfd;
+--text-1: #0e2240;
+--text-2: #3a4d6e;
+--text-3: #6f7f9b;
+--text-4: #9eaac1;
+--border: #e0e7f0;
+--border-soft: #eef2f8;
+--shadow-xs: 0 1px 3px rgba(14, 34, 64, 0.04);
+--shadow-sm: 0 2px 10px rgba(21, 101, 192, 0.06);
+--shadow-md: 0 8px 28px rgba(21, 101, 192, 0.10);
+--shadow-lg: 0 16px 48px rgba(21, 101, 192, 0.14);
+--radius-xs: 6px;
+--radius-sm: 10px;
+--radius-md: 14px;
+--radius-lg: 20px;
+--radius-xl: 28px;
+--gradient-primary: linear-gradient(135deg, #1565c0 0%, #00838f 100%);
+--gradient-primary-soft: linear-gradient(135deg, #e7f1fc 0%, #e0f4f6 100%);
+--gradient-banner: linear-gradient(125deg, #062a5e 0%, #0d47a1 35%, #1565c0 65%, #00838f 100%);
+--gradient-success: linear-gradient(135deg, #2e7d32 0%, #66bb6a 100%);
+--gradient-warning: linear-gradient(135deg, #ef6c00 0%, #ffb74d 100%);
+--gradient-danger: linear-gradient(135deg, #c62828 0%, #ef5350 100%);
+--gradient-accent: linear-gradient(135deg, #00838f 0%, #4dd0e1 100%);
+--transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+body {
+font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", "Source Han Sans CN", "Noto Sans SC", sans-serif;
+background: var(--bg);
+color: var(--text-1);
+line-height: 1.6;
+min-height: 100vh;
+-webkit-font-smoothing: antialiased;
+font-size: 14px;
+}
+/* 通用滚动条美化 */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #c4d3e6; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #a8bdd6; }
+/* ============ 顶部横幅(英雄区) ============ /
+.top-banner {
+background: var(--gradient-banner);
+color: #fff;
+padding: 36px 48px 32px;
+position: relative;
+overflow: hidden;
+}
+.top-banner::before {
+content: "";
+position: absolute;
+top: -50%; right: -10%;
+width: 700px; height: 700px;
+background: radial-gradient(circle, rgba(255,255,255,0.10) 0%, transparent 65%);
+pointer-events: none;
+}
+.top-banner::after {
+content: "";
+position: absolute;
+bottom: -50%; left: 25%;
+width: 500px; height: 500px;
+background: radial-gradient(circle, rgba(0,229,255,0.18) 0%, transparent 70%);
+pointer-events: none;
+}
+/ 装饰性医疗符号 */
+.banner-deco {
+position: absolute;
+font-size: 280px;
+font-weight: 900;
+opacity: 0.04;
+right: 5%;
+top: 50%;
+transform: translateY(-50%);
+font-family: serif;
+color: #fff;
+pointer-events: none;
+}
+.banner-inner {
+position: relative; z-index: 2;
+display: flex; justify-content: space-between; align-items: center;
+flex-wrap: wrap; gap: 24px;
+max-width: 1600px; margin: 0 auto;
+}
+.banner-left { max-width: 760px; }
+.banner-logo { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+.banner-logo-icon {
+width: 58px; height: 58px;
+background: rgba(255,255,255,0.18);
+border-radius: 16px;
+display: flex; align-items: center; justify-content: center;
+font-size: 30px; font-weight: bold;
+backdrop-filter: blur(12px);
+border: 1px solid rgba(255,255,255,0.30);
+box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.banner-title-group .banner-title {
+font-size: 30px; font-weight: 700; letter-spacing: 1px;
+display: flex; align-items: center; gap: 12px;
+}
+.banner-version-tag {
+font-size: 11px; padding: 3px 10px;
+background: rgba(255,255,255,0.22);
+border-radius: 20px;
+border: 1px solid rgba(255,255,255,0.3);
+font-weight: 500;
+letter-spacing: 0.5px;
+}
+.banner-subtitle { font-size: 13px; opacity: 0.82; margin-top: 4px; letter-spacing: 0.5px; }
+.banner-slogan {
+font-size: 17px; font-weight: 500;
+margin: 18px 0 18px;
+padding-left: 16px;
+border-left: 3px solid #4dd0e1;
+opacity: 0.96;
+line-height: 1.5;
+}
+.banner-tags { display: flex; gap: 10px; flex-wrap: wrap; }
+.banner-tag {
+padding: 7px 16px;
+background: rgba(255,255,255,0.13);
+border: 1px solid rgba(255,255,255,0.25);
+border-radius: 20px;
+font-size: 12px;
+backdrop-filter: blur(10px);
+transition: var(--transition);
+cursor: default;
+}
+.banner-tag:hover {
+background: rgba(255,255,255,0.25);
+transform: translateY(-1px);
+}
+.banner-status {
+background: rgba(255,255,255,0.10);
+padding: 20px 26px;
+border-radius: var(--radius-md);
+border: 1px solid rgba(255,255,255,0.22);
+backdrop-filter: blur(14px);
+min-width: 280px;
+box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+}
+.banner-status-title {
+font-size: 12px; opacity: 0.85; margin-bottom: 12px;
+display: flex; align-items: center; gap: 6px;
+padding-bottom: 10px;
+border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+.banner-status-pulse {
+width: 8px; height: 8px; border-radius: 50%;
+background: #4dd0e1;
+box-shadow: 0 0 8px #4dd0e1;
+animation: pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse {
+0%, 100% { opacity: 1; transform: scale(1); }
+50% { opacity: 0.5; transform: scale(1.4); }
+}
+.banner-status-row {
+display: flex; justify-content: space-between;
+padding: 7px 0; font-size: 13px;
+}
+.banner-status-row .val {
+font-weight: 600; color: #80deea;
+font-feature-settings: "tnum";
+}
+/* ============ 主体布局 ============ */
+.main-layout { display: flex; min-height: calc(100vh - 200px); }
+/* ----- 左侧导航 ----- */
+.sidebar {
+width: 230px;
+background: var(--surface);
+border-right: 1px solid var(--border);
+padding: 24px 14px 24px;
+flex-shrink: 0;
+position: sticky;
+top: 0;
+align-self: flex-start;
+height: 100vh;
+overflow-y: auto;
+}
+.sidebar-section-title {
+font-size: 11px;
+color: var(--text-4);
+letter-spacing: 2px;
+padding: 0 12px 10px;
+margin-bottom: 8px;
+font-weight: 600;
+border-bottom: 1px solid var(--border-soft);
+}
+.nav-item {
+display: flex; align-items: center; gap: 12px;
+padding: 12px 14px;
+border-radius: var(--radius-sm);
+cursor: pointer;
+color: var(--text-2);
+font-size: 14px;
+margin-bottom: 4px;
+transition: var(--transition);
+position: relative;
+font-weight: 500;
+}
+.nav-item:hover {
+background: var(--primary-lighter);
+color: var(--primary);
+}
+.nav-item.active {
+background: var(--gradient-primary);
+color: #fff;
+box-shadow: 0 4px 14px rgba(21, 101, 192, 0.30);
+}
+.nav-item.active::before {
+content: "";
+position: absolute; left: -14px; top: 50%;
+transform: translateY(-50%);
+width: 4px; height: 28px;
+background: var(--accent);
+border-radius: 0 4px 4px 0;
+}
+.nav-icon {
+width: 24px; height: 24px;
+display: flex; align-items: center; justify-content: center;
+font-size: 15px;
+flex-shrink: 0;
+}
+.nav-badge {
+margin-left: auto;
+font-size: 10px;
+padding: 2px 7px;
+background: rgba(0,0,0,0.06);
+border-radius: 10px;
+color: var(--text-3);
+}
+.nav-item.active .nav-badge {
+background: rgba(255,255,255,0.25);
+color: #fff;
+}
+.nav-item.new .nav-badge {
+background: var(--warning);
+color: #fff;
+}
+.sidebar-divider {
+height: 1px;
+background: var(--border-soft);
+margin: 18px 8px;
+}
+.sidebar-card {
+margin-top: 10px;
+padding: 16px;
+background: linear-gradient(135deg, #e7f1fc 0%, #e0f4f6 100%);
+border-radius: var(--radius-sm);
+font-size: 12px;
+color: var(--text-2);
+border: 1px solid rgba(21, 101, 192, 0.12);
+}
+.sidebar-card-title {
+font-weight: 600; color: var(--primary-dark);
+margin-bottom: 8px; font-size: 12.5px;
+display: flex; align-items: center; gap: 6px;
+}
+.sidebar-card-list {
+list-style: none;
+margin-top: 6px;
+}
+.sidebar-card-list li {
+padding: 4px 0;
+display: flex; align-items: center; gap: 6px;
+font-size: 12px;
+color: var(--text-2);
+}
+.sidebar-card-list li::before {
+content: "▸";
+color: var(--primary);
+font-size: 10px;
+}
+.sidebar-mini-stat {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 6px;
+margin-top: 12px;
+}
+.sidebar-mini-stat-cell {
+background: rgba(255,255,255,0.6);
+padding: 8px 10px;
+border-radius: 6px;
+text-align: center;
+}
+.sidebar-mini-stat-cell .val {
+font-size: 16px; font-weight: 700; color: var(--primary-dark);
+}
+.sidebar-mini-stat-cell .lbl {
+font-size: 10px; color: var(--text-3); margin-top: 2px;
+}
+/* ----- 主内容区 ----- */
+.content {
+flex: 1;
+padding: 30px 40px 50px;
+overflow-y: auto;
+max-width: 100%;
+}
+.module { display: none; animation: fadeUp 0.35s ease; }
+.module.active { display: block; }
+@keyframes fadeUp {
+from { opacity: 0; transform: translateY(12px); }
+to { opacity: 1; transform: translateY(0); }
+}
+/* 模块标题区 */
+.module-header {
+display: flex; justify-content: space-between; align-items: flex-end;
+margin-bottom: 24px;
+padding-bottom: 18px;
+border-bottom: 2px solid var(--border);
+gap: 20px;
+flex-wrap: wrap;
+}
+.module-title-block {
+display: flex; align-items: center; gap: 14px;
+}
+.module-title-icon {
+width: 46px; height: 46px;
+border-radius: 12px;
+background: var(--gradient-primary-soft);
+color: var(--primary);
+display: flex; align-items: center; justify-content: center;
+font-size: 22px;
+border: 1px solid rgba(21, 101, 192, 0.15);
+}
+.module-title { font-size: 22px; color: var(--text-1); font-weight: 700; letter-spacing: 0.5px; }
+.module-title-sub { font-size: 13px; color: var(--text-3); margin-top: 4px; font-weight: 400; }
+.module-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+/* ----- 通用按钮 ----- */
+.btn {
+padding: 9px 18px;
+border: none;
+border-radius: var(--radius-sm);
+font-size: 13px;
+cursor: pointer;
+font-weight: 500;
+transition: var(--transition);
+display: inline-flex; align-items: center; gap: 6px;
+font-family: inherit;
+white-space: nowrap;
+}
+.btn-primary { background: var(--gradient-primary); color: #fff; box-shadow: 0 2px 8px rgba(21, 101, 192, 0.25); }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(21, 101, 192, 0.35); }
+.btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+.btn-outline:hover { background: var(--primary-light); }
+.btn-ghost { background: var(--primary-light); color: var(--primary); }
+.btn-ghost:hover { background: #d8e8fa; }
+.btn-warning { background: var(--gradient-warning); color: #fff; box-shadow: 0 2px 8px rgba(239, 108, 0, 0.25); }
+.btn-warning:hover { transform: translateY(-1px); }
+.btn-success { background: var(--gradient-success); color: #fff; box-shadow: 0 2px 8px rgba(46, 125, 50, 0.25); }
+.btn-success:hover { transform: translateY(-1px); }
+.btn-danger { background: var(--gradient-danger); color: #fff; }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-icon {
+width: 36px; height: 36px;
+padding: 0;
+display: inline-flex; align-items: center; justify-content: center;
+border-radius: 8px;
+background: var(--primary-light);
+color: var(--primary);
+border: none; cursor: pointer;
+transition: var(--transition);
+}
+.btn-icon:hover { background: #d8e8fa; }
+/* ============ 仪表盘:数据卡片 ============ */
+.stat-grid {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 18px;
+margin-bottom: 22px;
+}
+.stat-card {
+background: var(--surface);
+padding: 22px;
+border-radius: var(--radius-md);
+box-shadow: var(--shadow-sm);
+position: relative; overflow: hidden;
+transition: var(--transition);
+border: 1px solid var(--border-soft);
+}
+.stat-card::before {
+content: "";
+position: absolute;
+top: 0; left: 0; bottom: 0;
+width: 4px;
+background: var(--gradient-primary);
+}
+.stat-card:hover {
+transform: translateY(-3px);
+box-shadow: var(--shadow-md);
+}
+.stat-card.accent::before { background: var(--gradient-accent); }
+.stat-card.success::before { background: var(--gradient-success); }
+.stat-card.warning::before { background: var(--gradient-warning); }
+.stat-header {
+display: flex; justify-content: space-between; align-items: center;
+margin-bottom: 12px;
+}
+.stat-label {
+font-size: 12.5px; color: var(--text-3);
+font-weight: 500;
+}
+.stat-icon-mini {
+width: 32px; height: 32px;
+border-radius: 8px;
+background: var(--primary-light);
+color: var(--primary);
+display: flex; align-items: center; justify-content: center;
+font-size: 15px;
+}
+.stat-card.accent .stat-icon-mini { background: var(--accent-light); color: var(--accent); }
+.stat-card.success .stat-icon-mini { background: var(--success-light); color: var(--success); }
+.stat-card.warning .stat-icon-mini { background: var(--warning-light); color: var(--warning); }
+.stat-value {
+font-size: 30px; font-weight: 700; color: var(--text-1);
+font-feature-settings: "tnum";
+line-height: 1.1;
+}
+.stat-unit {
+font-size: 14px; color: var(--text-2); margin-left: 4px; font-weight: 500;
+}
+.stat-meta {
+display: flex; justify-content: space-between; align-items: center;
+margin-top: 12px;
+padding-top: 10px;
+border-top: 1px dashed var(--border);
+}
+.stat-trend { font-size: 12px; color: var(--success); display: flex; align-items: center; gap: 4px; font-weight: 500; }
+.stat-trend.warn { color: var(--warning); }
+.stat-trend.danger { color: var(--danger); }
+.stat-secondary { font-size: 11px; color: var(--text-4); }
+/* 微型趋势条 */
+.spark-bar {
+display: flex; align-items: flex-end; gap: 2px;
+height: 22px; margin-top: 8px;
+}
+.spark-bar div {
+flex: 1;
+background: var(--primary-light);
+border-radius: 1px;
+transition: var(--transition);
+}
+.spark-bar div:nth-child(odd) { background: var(--primary); opacity: 0.7; }
+.spark-bar div:last-child { background: var(--accent); opacity: 1; }
+/* ----- 仪表盘多列布局 ----- */
+.dash-row { display: grid; gap: 18px; margin-bottom: 18px; }
+.dash-row-2 { grid-template-columns: 1.4fr 1fr; }
+.dash-row-3 { grid-template-columns: repeat(3, 1fr); }
+.dash-row-2-1 { grid-template-columns: 2fr 1fr; }
+.panel {
+background: var(--surface);
+border-radius: var(--radius-md);
+padding: 22px 24px;
+box-shadow: var(--shadow-sm);
+border: 1px solid var(--border-soft);
+}
+.panel-header {
+display: flex; justify-content: space-between; align-items: center;
+margin-bottom: 18px;
+padding-bottom: 14px;
+border-bottom: 1px solid var(--border-soft);
+}
+.panel-title {
+font-size: 16px; font-weight: 600; color: var(--text-1);
+display: flex; align-items: center; gap: 10px;
+}
+.panel-title::before {
+content: ""; width: 4px; height: 16px;
+background: var(--gradient-primary); border-radius: 2px;
+}
+.panel-title-extra {
+font-size: 11px; color: var(--text-4); margin-left: 6px;
+font-weight: 400;
+}
+.panel-link {
+font-size: 12px; color: var(--primary); cursor: pointer;
+display: flex; align-items: center; gap: 4px;
+transition: color 0.2s;
+}
+.panel-link:hover { color: var(--primary-dark); }
+/* 功能卡片网格 */
+.module-cards {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 18px;
+margin-bottom: 22px;
+}
+.module-card {
+background: var(--surface);
+border-radius: var(--radius-md);
+padding: 24px 22px;
+cursor: pointer;
+transition: var(--transition);
+border: 1px solid var(--border-soft);
+position: relative; overflow: hidden;
+}
+.module-card::before {
+content: "";
+position: absolute; top: 0; left: 0; right: 0;
+height: 3px;
+background: var(--gradient-primary);
+transform: scaleX(0);
+transform-origin: left;
+transition: transform 0.35s ease;
+}
+.module-card::after {
+content: "→";
+position: absolute;
+bottom: 18px; right: 22px;
+font-size: 18px;
+color: var(--text-4);
+transition: var(--transition);
+}
+.module-card:hover {
+transform: translateY(-5px);
+box-shadow: var(--shadow-md);
+border-color: rgba(21, 101, 192, 0.20);
+}
+.module-card:hover::before { transform: scaleX(1); }
+.module-card:hover::after { color: var(--primary); transform: translateX(4px); }
+.module-card-header {
+display: flex; align-items: center; gap: 12px;
+margin-bottom: 14px;
+}
+.module-card-icon {
+width: 50px; height: 50px;
+background: var(--primary-light);
+color: var(--primary);
+border-radius: 12px;
+display: flex; align-items: center; justify-content: center;
+font-size: 22px;
+flex-shrink: 0;
+}
+.module-card-icon.accent { background: var(--accent-light); color: var(--accent); }
+.module-card-icon.success { background: var(--success-light); color: var(--success); }
+.module-card-icon.warning { background: var(--warning-light); color: var(--warning); }
+.module-card-counter {
+font-size: 11px;
+color: var(--text-4);
+background: var(--bg);
+padding: 3px 8px;
+border-radius: 10px;
+}
+.module-card-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; color: var(--text-1); }
+.module-card-desc { font-size: 12.5px; color: var(--text-3); line-height: 1.6; min-height: 38px; }
+.module-card-footer {
+margin-top: 14px;
+padding-top: 12px;
+border-top: 1px dashed var(--border);
+display: flex; justify-content: space-between; align-items: center;
+font-size: 12px;
+color: var(--text-3);
+}
+.module-card-footer .pct { color: var(--primary); font-weight: 600; }
+/* ----- 推荐学习项 ----- */
+.recommend-list { list-style: none; }
+.recommend-item {
+display: flex; align-items: center; justify-content: space-between;
+padding: 13px 0;
+border-bottom: 1px dashed var(--border);
+gap: 12px;
+}
+.recommend-item:last-child { border-bottom: none; }
+.recommend-info {
+display: flex; align-items: center; gap: 12px; flex: 1;
+min-width: 0;
+}
+.recommend-tag {
+padding: 4px 10px;
+background: var(--accent-light);
+color: var(--accent);
+font-size: 11px;
+border-radius: 20px;
+font-weight: 500;
+white-space: nowrap;
+flex-shrink: 0;
+}
+.recommend-tag.warn { background: var(--warning-light); color: var(--warning); }
+.recommend-tag.danger { background: var(--danger-light); color: var(--danger); }
+.recommend-tag.primary { background: var(--primary-light); color: var(--primary); }
+.recommend-tag.success { background: var(--success-light); color: var(--success); }
+.recommend-text { font-size: 13px; color: var(--text-2); line-height: 1.5; }
+.recommend-meta { font-size: 11px; color: var(--text-4); margin-top: 3px; }
+/* ----- 雷达图 ----- */
+.radar-container {
+display: flex; flex-direction: column; align-items: center; padding: 6px 0;
+}
+.radar-svg { width: 100%; max-width: 340px; height: auto; }
+.radar-legend {
+display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+margin-top: 16px; width: 100%;
+}
+.radar-legend-item {
+display: flex; align-items: center; justify-content: space-between;
+font-size: 12px; padding: 7px 12px;
+background: var(--surface-soft); border-radius: 6px;
+border: 1px solid var(--border-soft);
+}
+.radar-legend-item .name { color: var(--text-2); }
+.radar-legend-item .score {
+font-weight: 700; color: var(--primary);
+font-feature-settings: "tnum";
+}
+.radar-legend-item.weak .score { color: var(--danger); }
+.radar-legend-item.mid .score { color: var(--warning); }
+/* ----- 进度条 ----- */
+.progress-row { margin-bottom: 14px; }
+.progress-row:last-child { margin-bottom: 0; }
+.progress-label {
+display: flex; justify-content: space-between;
+font-size: 13px; color: var(--text-2); margin-bottom: 6px;
+align-items: center;
+}
+.progress-label .meta { font-size: 11px; color: var(--text-4); margin-top: 2px; }
+.progress-label .right { display: flex; align-items: center; gap: 8px; }
+.progress-label .score-num {
+font-feature-settings: "tnum";
+font-weight: 600;
+color: var(--text-1);
+}
+.progress-bar {
+height: 8px;
+background: var(--bg-deep);
+border-radius: 8px;
+overflow: hidden;
+position: relative;
+}
+.progress-fill {
+height: 100%;
+background: var(--gradient-primary);
+border-radius: 8px;
+transition: width 0.8s ease;
+position: relative;
+}
+.progress-fill.success { background: var(--gradient-success); }
+.progress-fill.warning { background: var(--gradient-warning); }
+.progress-fill.danger { background: var(--gradient-danger); }
+.progress-fill.accent { background: var(--gradient-accent); }
+/* 重点疾病入口卡 */
+.disease-shortcut {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 10px;
+}
+.disease-chip {
+padding: 14px 14px;
+background: linear-gradient(135deg, #f4f9ff 0%, #e8f4f7 100%);
+border-radius: var(--radius-sm);
+cursor: pointer;
+transition: var(--transition);
+border: 1px solid transparent;
+display: flex; align-items: center; gap: 12px;
+}
+.disease-chip:hover {
+transform: translateY(-2px);
+box-shadow: var(--shadow-sm);
+border-color: var(--primary);
+}
+.disease-chip-icon {
+width: 38px; height: 38px;
+background: var(--surface);
+color: var(--primary);
+border-radius: 10px;
+display: flex; align-items: center; justify-content: center;
+font-size: 16px; font-weight: 700;
+border: 1px solid var(--border-soft);
+}
+.disease-chip-info { flex: 1; min-width: 0; }
+.disease-chip-name {
+font-size: 13px; font-weight: 600; color: var(--primary-dark);
+margin-bottom: 4px;
+}
+.disease-chip-meta {
+display: flex; align-items: center; gap: 6px;
+font-size: 10px; color: var(--text-3);
+}
+.disease-chip-pct {
+height: 4px; flex: 1;
+background: rgba(21,101,192,0.1);
+border-radius: 4px; overflow: hidden; margin-top: 4px;
+}
+.disease-chip-pct-fill {
+height: 100%; background: var(--gradient-primary);
+border-radius: 4px;
+}
+/* 教学导向说明 */
+.teaching-orient {
+background: linear-gradient(135deg, #e7f1fc 0%, #e0f4f6 100%);
+padding: 18px 20px;
+border-radius: var(--radius-md);
+border-left: 4px solid var(--accent);
+}
+.teaching-orient-title {
+font-size: 14px; font-weight: 600; color: var(--primary-dark);
+margin-bottom: 10px;
+display: flex; align-items: center; gap: 6px;
+}
+.teaching-orient-text { font-size: 12.5px; color: var(--text-2); line-height: 1.8; }
+.teaching-orient-text strong { color: var(--primary-dark); }
+/* 五大教学维度小卡 */
+.orient-pillars {
+display: grid;
+grid-template-columns: repeat(5, 1fr);
+gap: 6px;
+margin-top: 14px;
+}
+.orient-pillar {
+background: rgba(255,255,255,0.7);
+padding: 8px 6px;
+border-radius: 6px;
+text-align: center;
+font-size: 11px;
+color: var(--primary-dark);
+font-weight: 500;
+}
+.orient-pillar-num {
+font-size: 14px; font-weight: 700;
+color: var(--accent);
+margin-bottom: 2px;
+font-family: serif;
+}
+/* ----- 训练日历热力图 ----- */
+.activity-heatmap {
+display: grid;
+grid-template-columns: repeat(7, 1fr);
+gap: 5px;
+margin-bottom: 14px;
+}
+.heatmap-cell {
+aspect-ratio: 1;
+background: var(--bg-deep);
+border-radius: 4px;
+position: relative;
+cursor: pointer;
+transition: var(--transition);
+}
+.heatmap-cell:hover { transform: scale(1.15); box-shadow: 0 0 0 2px var(--primary); z-index: 2; }
+.heatmap-cell[data-level="0"] { background: var(--bg-deep); }
+.heatmap-cell[data-level="1"] { background: #c5e1f7; }
+.heatmap-cell[data-level="2"] { background: #7fbef0; }
+.heatmap-cell[data-level="3"] { background: #4393de; }
+.heatmap-cell[data-level="4"] { background: var(--primary); }
+.heatmap-cell[data-level="5"] { background: var(--primary-dark); }
+.heatmap-legend {
+display: flex; align-items: center; justify-content: flex-end; gap: 6px;
+font-size: 10px; color: var(--text-4);
+}
+.heatmap-legend .lvl {
+width: 12px; height: 12px; border-radius: 3px;
+}
+/* ----- 学习时间分布 ----- */
+.time-distribution {
+display: flex; align-items: flex-end;
+gap: 8px;
+height: 120px;
+padding: 10px 0;
+}
+.time-bar-group {
+flex: 1;
+display: flex; flex-direction: column;
+align-items: center;
+gap: 4px;
+}
+.time-bar-stack {
+width: 100%;
+display: flex; flex-direction: column;
+border-radius: 4px;
+overflow: hidden;
+background: var(--bg-deep);
+min-height: 20px;
+}
+.time-bar-seg {
+width: 100%;
+transition: var(--transition);
+}
+.time-bar-seg.case { background: var(--primary); }
+.time-bar-seg.teach { background: var(--accent); }
+.time-bar-seg.reason { background: #4dd0e1; }
+.time-bar-seg.kb { background: #80deea; }
+.time-bar-label {
+font-size: 10px; color: var(--text-3); margin-top: 4px;
+}
+.time-legend {
+display: flex; gap: 14px; flex-wrap: wrap;
+margin-top: 10px;
+padding-top: 10px;
+border-top: 1px dashed var(--border);
+font-size: 11px;
+justify-content: center;
+}
+.time-legend-item {
+display: flex; align-items: center; gap: 5px;
+color: var(--text-3);
+}
+.time-legend-dot {
+width: 10px; height: 10px; border-radius: 2px;
+}
+/* ============ 模块二:外科虚拟带教 ============ */
+.teach-layout {
+display: grid;
+grid-template-columns: 320px 1fr;
+gap: 18px;
+}
+.teach-task-list {
+background: var(--surface);
+border-radius: var(--radius-md);
+padding: 20px;
+box-shadow: var(--shadow-sm);
+border: 1px solid var(--border-soft);
+height: fit-content;
+}
+.teach-disease-select {
+display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px;
+}
+.teach-disease-btn {
+padding: 7px 13px;
+background: var(--bg);
+border: 1px solid var(--border);
+border-radius: 20px;
+font-size: 12px;
+cursor: pointer;
+color: var(--text-2);
+transition: var(--transition);
+font-weight: 500;
+}
+.teach-disease-btn:hover { border-color: var(--primary); color: var(--primary); }
+.teach-disease-btn.active {
+background: var(--gradient-primary);
+color: #fff;
+border-color: transparent;
+box-shadow: 0 2px 8px rgba(21, 101, 192, 0.25);
+}
+.teach-progress-line {
+height: 4px;
+background: var(--bg-deep);
+border-radius: 4px;
+margin: 12px 0 16px;
+overflow: hidden;
+}
+.teach-progress-line-fill {
+height: 100%; background: var(--gradient-primary);
+border-radius: 4px;
+transition: width 0.5s ease;
+}
+.teach-question-list { list-style: none; }
+.teach-question-item {
+padding: 12px 14px;
+border-radius: var(--radius-sm);
+margin-bottom: 8px;
+cursor: pointer;
+border: 1px solid var(--border);
+transition: var(--transition);
+background: var(--surface-soft);
+}
+.teach-question-item:hover { border-color: var(--primary); transform: translateX(2px); }
+.teach-question-item.active {
+background: var(--primary-light);
+border-color: var(--primary);
+color: var(--primary-dark);
+box-shadow: 0 2px 8px rgba(21, 101, 192, 0.10);
+}
+.teach-question-item.done {
+background: var(--success-light);
+border-color: var(--success);
+}
+.teach-question-step {
+display: flex; align-items: center; justify-content: space-between;
+font-size: 11px; color: var(--text-3); margin-bottom: 6px;
+}
+.teach-question-step .stage {
+padding: 1px 8px; background: var(--bg-deep);
+border-radius: 10px; color: var(--text-2);
+}
+.teach-question-item.active .teach-question-step .stage {
+background: var(--primary); color: #fff;
+}
+.teach-question-item.done .teach-question-step .stage {
+background: var(--success); color: #fff;
+}
+.teach-question-text {
+font-size: 13px; line-height: 1.55;
+color: var(--text-2);
+}
+.teach-question-item.active .teach-question-text { color: var(--text-1); font-weight: 500; }
+/* 主区 */
+.teach-main {
+background: var(--surface);
+border-radius: var(--radius-md);
+padding: 26px;
+box-shadow: var(--shadow-sm);
+border: 1px solid var(--border-soft);
+}
+.teach-scene {
+background: linear-gradient(135deg, #f4f9ff 0%, #e8f4f7 100%);
+padding: 18px 20px;
+border-radius: var(--radius-md);
+margin-bottom: 20px;
+border-left: 4px solid var(--primary);
+position: relative;
+}
+.teach-scene-header {
+display: flex; align-items: center; gap: 10px;
+margin-bottom: 8px;
+}
+.teach-scene-label {
+font-size: 12px; color: var(--primary);
+font-weight: 600;
+display: flex; align-items: center; gap: 6px;
+}
+.teach-scene-meta {
+font-size: 11px; color: var(--text-3);
+margin-left: auto;
+}
+.teach-scene-text { font-size: 13.5px; color: var(--text-2); line-height: 1.75; }
+.teach-current-q {
+background: #fff;
+padding: 22px;
+border-radius: var(--radius-md);
+border: 2px solid var(--primary-light);
+margin-bottom: 18px;
+position: relative;
+}
+.teach-current-q-header {
+display: flex; align-items: center; justify-content: space-between;
+margin-bottom: 12px;
+}
+.teach-current-q-label {
+display: inline-flex; align-items: center; gap: 6px;
+font-size: 11px; color: #fff;
+background: var(--gradient-primary);
+padding: 4px 12px;
+border-radius: 20px;
+font-weight: 500;
+}
+.teach-current-q-type {
+font-size: 11px; color: var(--text-3);
+padding: 3px 10px;
+background: var(--bg);
+border-radius: 20px;
+}
+.teach-current-q-text {
+font-size: 16px; font-weight: 500; color: var(--text-1);
+line-height: 1.65;
+}
+.teach-current-q-prompt {
+margin-top: 10px; padding: 10px 14px;
+background: var(--surface-soft);
+border-left: 3px solid var(--accent);
+font-size: 12.5px; color: var(--text-3);
+border-radius: 0 6px 6px 0;
+font-style: italic;
+}
+.teach-input-block {
+margin-bottom: 16px;
+}
+.teach-input-label {
+font-size: 12px; color: var(--text-3); margin-bottom: 6px;
+display: flex; align-items: center; justify-content: space-between;
+}
+.teach-input-label .word-count {
+font-size: 11px; color: var(--text-4);
+font-feature-settings: "tnum";
+}
+.teach-answer-box {
+width: 100%; min-height: 110px;
+padding: 14px;
+border: 1px solid var(--border);
+border-radius: var(--radius-sm);
+font-family: inherit; font-size: 13px;
+resize: vertical;
+background: var(--surface-soft);
+color: var(--text-1);
+transition: var(--transition);
+line-height: 1.6;
+}
+.teach-answer-box:focus {
+outline: none; border-color: var(--primary);
+background: #fff;
+box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.08);
+}
+.teach-action-bar {
+display: flex; gap: 10px; flex-wrap: wrap;
+margin-bottom: 18px;
+padding-bottom: 16px;
+border-bottom: 1px dashed var(--border);
+}
+.teach-feedback-block {
+margin-bottom: 12px;
+border-radius: var(--radius-sm);
+overflow: hidden;
+display: none;
+animation: fadeUp 0.3s;
+}
+.teach-feedback-block.show { display: block; }
+.teach-feedback-block-head {
+padding: 10px 16px;
+display: flex; align-items: center; gap: 8px;
+font-weight: 600; font-size: 13px;
+}
+.teach-feedback-block-body {
+padding: 14px 18px;
+font-size: 13px; color: var(--text-2);
+line-height: 1.75;
+background: #fff;
+border: 1px solid;
+border-top: none;
+border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+}
+.teach-feedback-block.ref .teach-feedback-block-head { background: var(--primary-light); color: var(--primary); }
+.teach-feedback-block.ref .teach-feedback-block-body { border-color: rgba(21,101,192,0.15); }
+.teach-feedback-block.comment .teach-feedback-block-head { background: var(--success-light); color: var(--success); }
+.teach-feedback-block.comment .teach-feedback-block-body { border-color: rgba(46,125,50,0.15); }
+.teach-feedback-block.warn .teach-feedback-block-head { background: var(--warning-light); color: var(--warning); }
+.teach-feedback-block.warn .teach-feedback-block-body { border-color: rgba(239,108,0,0.15); }
+.teach-feedback-block.summary .teach-feedback-block-head { background: var(--accent-light); color: var(--accent); }
+.teach-feedback-block.summary .teach-feedback-block-body { border-color: rgba(0,131,143,0.15); }
+.teach-takeaway {
+margin-top: 18px;
+padding: 16px 18px;
+background: linear-gradient(135deg, #f4f9ff 0%, #e8f4f7 100%);
+border-radius: var(--radius-sm);
+border-left: 4px solid var(--accent);
+}
+.teach-takeaway-title {
+font-size: 12px; font-weight: 600; color: var(--primary-dark);
+margin-bottom: 8px;
+display: flex; align-items: center; gap: 6px;
+}
+.teach-takeaway-text { font-size: 12.5px; color: var(--text-2); line-height: 1.7; }
+/* ============ 模块三:病例模拟 ============ */
+.case-control {
+background: var(--surface);
+padding: 20px 24px;
+border-radius: var(--radius-md);
+box-shadow: var(--shadow-sm);
+margin-bottom: 18px;
+border: 1px solid var(--border-soft);
+display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+}
+.case-filter-group { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.case-filter-label {
+font-size: 12.5px; color: var(--text-3);
+display: flex; align-items: center; gap: 4px;
+font-weight: 500;
+}
+.case-filter-options { display: flex; gap: 6px; flex-wrap: wrap; }
+.case-filter-btn {
+padding: 7px 14px;
+background: var(--bg);
+border: 1px solid var(--border);
+border-radius: 20px;
+font-size: 12px;
+cursor: pointer;
+color: var(--text-2);
+transition: var(--transition);
+font-weight: 500;
+}
+.case-filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+.case-filter-btn.active {
+background: var(--gradient-primary);
+color: #fff;
+border-color: transparent;
+box-shadow: 0 2px 8px rgba(21,101,192,0.25);
+}
+/* 阶梯进度 */
+.case-progress {
+display: flex; align-items: flex-start;
+background: var(--surface);
+padding: 22px 24px;
+border-radius: var(--radius-md);
+box-shadow: var(--shadow-sm);
+margin-bottom: 18px;
+border: 1px solid var(--border-soft);
+overflow-x: auto;
+}
+.case-step {
+display: flex; flex-direction: column; align-items: center;
+flex: 1; min-width: 90px; position: relative;
+}
+.case-step-circle {
+width: 38px; height: 38px;
+border-radius: 50%;
+background: var(--surface);
+color: var(--text-3);
+display: flex; align-items: center; justify-content: center;
+font-weight: 600;
+border: 2px solid var(--border);
+z-index: 2;
+transition: var(--transition);
+font-size: 14px;
+}
+.case-step.active .case-step-circle {
+background: var(--gradient-primary);
+color: #fff; border-color: transparent;
+box-shadow: 0 0 0 5px rgba(21, 101, 192, 0.18);
+animation: stepPulse 2s ease infinite;
+}
+@keyframes stepPulse {
+0%, 100% { box-shadow: 0 0 0 5px rgba(21, 101, 192, 0.15); }
+50% { box-shadow: 0 0 0 8px rgba(21, 101, 192, 0.05); }
+}
+.case-step.completed .case-step-circle {
+background: var(--gradient-success);
+color: #fff; border-color: transparent;
+}
+.case-step.completed .case-step-circle::after {
+content: "✓"; font-size: 16px;
+}
+.case-step.completed .case-step-circle .step-num { display: none; }
+.case-step-label {
+font-size: 11.5px; color: var(--text-3); margin-top: 8px; text-align: center;
+max-width: 80px; line-height: 1.4;
+}
+.case-step.active .case-step-label { color: var(--primary); font-weight: 600; }
+.case-step.completed .case-step-label { color: var(--success); font-weight: 500; }
+.case-step:not(:last-child)::after {
+content: ""; position: absolute;
+top: 19px; left: calc(50% + 19px); right: calc(-50% + 19px);
+height: 2px; background: var(--border);
+z-index: 1;
+transition: background 0.3s;
+}
+.case-step.completed:not(:last-child)::after { background: var(--success); }
+/* 病例内容 */
+.case-content-area {
+background: var(--surface);
+border-radius: var(--radius-md);
+padding: 28px;
+box-shadow: var(--shadow-sm);
+border: 1px solid var(--border-soft);
+}
+.case-info-header {
+display: flex; justify-content: space-between;
+padding-bottom: 18px; margin-bottom: 22px;
+border-bottom: 2px solid var(--border-soft);
+align-items: flex-start; gap: 16px; flex-wrap: wrap;
+}
+.case-info-title {
+font-size: 19px; font-weight: 700; color: var(--text-1);
+display: flex; align-items: center; gap: 10px;
+}
+.case-info-title-icon {
+width: 36px; height: 36px;
+background: var(--gradient-primary-soft);
+color: var(--primary);
+border-radius: 10px;
+display: flex; align-items: center; justify-content: center;
+font-size: 18px;
+}
+.case-info-meta {
+font-size: 12px; color: var(--text-3); margin-top: 6px;
+padding-left: 46px;
+}
+.case-info-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.case-info-tag {
+padding: 5px 12px; font-size: 11px;
+background: var(--accent-light); color: var(--accent);
+border-radius: 20px; font-weight: 500;
+}
+.case-info-tag.warn { background: var(--warning-light); color: var(--warning); }
+.case-info-tag.success { background: var(--success-light); color: var(--success); }
+.case-stage-block {
+background: var(--surface-soft);
+border-radius: var(--radius-md);
+padding: 20px 22px;
+margin-bottom: 16px;
+border-left: 4px solid var(--primary);
+position: relative;
+animation: fadeUp 0.4s;
+}
+.case-stage-label {
+font-size: 12.5px; color: var(--primary);
+font-weight: 600; margin-bottom: 12px;
+display: flex; align-items: center; gap: 8px;
+}
+.case-stage-label .stage-num {
+width: 22px; height: 22px;
+background: var(--gradient-primary);
+color: #fff; border-radius: 50%;
+display: flex; align-items: center; justify-content: center;
+font-size: 12px; font-weight: 600;
+}
+.case-stage-content {
+font-size: 13.5px; color: var(--text-2); line-height: 1.85;
+}
+.case-stage-content strong { color: var(--text-1); }
+.case-stage-content ul { margin-left: 20px; margin-top: 6px; }
+.case-stage-content li { margin-bottom: 5px; }
+/* 数据网格 - 病例展示 */
+.case-data-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+gap: 10px;
+margin-top: 12px;
+}
+.case-data-cell {
+background: var(--surface);
+padding: 10px 12px;
+border-radius: 8px;
+border: 1px solid var(--border-soft);
+}
+.case-data-cell .lbl { font-size: 11px; color: var(--text-3); }
+.case-data-cell .val { font-size: 14px; font-weight: 600; color: var(--text-1); margin-top: 2px; }
+.case-data-cell.abnormal .val { color: var(--danger); }
+.case-data-cell.abnormal::after { content: "↑"; color: var(--danger); margin-left: 4px; }
+.case-data-cell.low .val { color: var(--warning); }
+.case-data-cell.low::after { content: "↓"; color: var(--warning); margin-left: 4px; }
+/* 决策点 */
+.case-decision {
+background: linear-gradient(135deg, #fffaf2 0%, #fff5e6 100%);
+padding: 22px;
+border-radius: var(--radius-md);
+border: 1px solid rgba(239,108,0,0.18);
+border-left: 4px solid var(--warning);
+margin: 20px 0;
+}
+.case-decision-title {
+font-size: 14px; font-weight: 600; color: var(--warning);
+margin-bottom: 14px;
+display: flex; align-items: center; gap: 8px;
+}
+.case-decision-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+.case-decision-option {
+padding: 12px 16px;
+background: #fff;
+border: 1.5px solid var(--border);
+border-radius: var(--radius-sm);
+cursor: pointer;
+font-size: 13px;
+transition: var(--transition);
+display: flex; align-items: flex-start; gap: 10px;
+}
+.case-decision-option::before {
+content: attr(data-letter);
+width: 24px; height: 24px;
+background: var(--bg); color: var(--text-2);
+border-radius: 50%;
+display: flex; align-items: center; justify-content: center;
+font-weight: 600; font-size: 11px;
+flex-shrink: 0;
+transition: var(--transition);
+}
+.case-decision-option:hover { border-color: var(--warning); background: #fffaf2; }
+.case-decision-option:hover::before { background: var(--warning); color: #fff; }
+.case-decision-option.selected {
+background: var(--warning); color: #fff; border-color: transparent;
+box-shadow: 0 4px 14px rgba(239, 108, 0, 0.25);
+}
+.case-decision-option.selected::before { background: rgba(255,255,255,0.25); color: #fff; }
+.case-decision-option.correct {
+background: var(--success); color: #fff; border-color: transparent;
+}
+.case-decision-option.correct::before { background: rgba(255,255,255,0.25); color: #fff; content: "✓"; }
+.case-decision-option.wrong {
+background: var(--danger-light); color: var(--danger); border-color: var(--danger);
+}
+.case-reasoning {
+width: 100%; min-height: 80px;
+padding: 12px;
+border: 1px solid var(--border);
+border-radius: var(--radius-sm);
+font-family: inherit; font-size: 13px;
+resize: vertical; margin-bottom: 14px;
+background: #fff;
+}
+.case-reasoning:focus { outline: none; border-color: var(--warning); box-shadow: 0 0 0 3px rgba(239,108,0,0.1); }
+.case-feedback {
+display: none;
+background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e9 100%);
+padding: 18px 20px; border-radius: var(--radius-sm);
+border-left: 4px solid var(--success);
+margin-top: 14px;
+}
+.case-feedback.show { display: block; animation: fadeUp 0.3s; }
+.case-feedback-title {
+font-size: 13px; font-weight: 600; color: var(--success);
+margin-bottom: 10px;
+display: flex; align-items: center; gap: 6px;
+}
+.case-feedback-text { font-size: 13px; color: var(--text-2); line-height: 1.75; }
+.case-feedback-text strong { color: var(--text-1); }
+/* 最终总结 */
+.case-final-summary {
+display: none;
+background: var(--gradient-primary);
+color: #fff;
+padding: 26px;
+border-radius: var(--radius-md);
+margin-top: 22px;
+box-shadow: 0 8px 32px rgba(21, 101, 192, 0.20);
+position: relative;
+overflow: hidden;
+}
+.case-final-summary::before {
+content: "";
+position: absolute;
+top: -30%; right: -20%;
+width: 400px; height: 400px;
+background: radial-gradient(circle, rgba(255,255,255,0.10) 0%, transparent 60%);
+pointer-events: none;
+}
+.case-final-summary.show { display: block; animation: fadeUp 0.4s; }
+.case-final-summary-title {
+font-size: 17px; font-weight: 600; margin-bottom: 14px;
+display: flex; align-items: center; gap: 10px;
+position: relative;
+}
+.case-final-summary-text {
+font-size: 13.5px; line-height: 1.75; opacity: 0.95;
+position: relative;
+}
+.case-final-summary-grid {
+display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 18px;
+position: relative;
+}
+.case-final-stat {
+background: rgba(255,255,255,0.13);
+padding: 14px 16px; border-radius: var(--radius-sm);
+backdrop-filter: blur(10px);
+border: 1px solid rgba(255,255,255,0.15);
+}
+.case-final-stat-label { font-size: 11px; opacity: 0.85; }
+.case-final-stat-value {
+font-size: 22px; font-weight: 700; margin-top: 4px;
+font-feature-settings: "tnum";
+}
+.case-actions { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+/* ============ 模块四:诊断推理 ============ */
+.reason-layout {
+display: grid;
+grid-template-columns: 290px 1fr 290px;
+gap: 18px;
+}
+.reason-clues {
+background: var(--surface);
+border-radius: var(--radius-md);
+padding: 22px;
+box-shadow: var(--shadow-sm);
+border: 1px solid var(--border-soft);
+height: fit-content;
+}
+.reason-patient-card {
+background: linear-gradient(135deg, #f4f9ff 0%, #e8f4f7 100%);
+padding: 14px;
+border-radius: var(--radius-sm);
+margin-bottom: 18px;
+border-left: 3px solid var(--primary);
+}
+.reason-patient-row {
+display: flex; justify-content: space-between;
+font-size: 11.5px; color: var(--text-2);
+padding: 3px 0;
+}
+.reason-patient-row .lbl { color: var(--text-3); }
+.reason-patient-chief {
+margin-top: 8px;
+padding-top: 8px;
+border-top: 1px dashed rgba(21,101,192,0.15);
+font-size: 12px;
+color: var(--text-1);
+font-weight: 500;
+}
+.clue-section { margin-bottom: 16px; }
+.clue-title {
+font-size: 12.5px; font-weight: 600; color: var(--primary-dark);
+margin-bottom: 8px; padding-bottom: 6px;
+border-bottom: 1px dashed var(--border);
+display: flex; align-items: center; gap: 6px;
+}
+.clue-title-count {
+margin-left: auto;
+font-size: 10px;
+background: var(--primary-light);
+color: var(--primary);
+padding: 1px 7px;
+border-radius: 10px;
+font-weight: 500;
+}
+.clue-list { list-style: none; }
+.clue-item {
+padding: 7px 10px;
+background: var(--surface-soft);
+margin-bottom: 5px;
+font-size: 12px;
+border-radius: 6px;
+color: var(--text-2);
+border-left: 2px solid var(--accent);
+cursor: pointer;
+transition: var(--transition);
+position: relative;
+}
+.clue-item:hover { background: var(--primary-light); transform: translateX(2px); }
+.clue-item.key {
+border-left-color: var(--danger);
+background: #fff5f5;
+color: var(--danger);
+font-weight: 500;
+}
+.clue-item.key::before {
+content: "★";
+margin-right: 5px;
+color: var(--danger);
+font-size: 10px;
+}
+/* 推理时间线 */
+.reason-flow {
+background: var(--surface);
+border-radius: var(--radius-md);
+padding: 26px;
+box-shadow: var(--shadow-sm);
+border: 1px solid var(--border-soft);
+}
+.reason-flow-meta {
+display: flex; justify-content: space-between; align-items: center;
+margin-bottom: 18px; padding-bottom: 14px;
+border-bottom: 1px solid var(--border-soft);
+}
+.reason-flow-meta .panel-title { margin-bottom: 0; }
+.reason-step-counter {
+font-size: 12px; color: var(--text-3);
+}
+.reason-step-counter strong {
+font-size: 16px; color: var(--primary);
+font-feature-settings: "tnum";
+}
+.reason-timeline { position: relative; padding-left: 32px; }
+.reason-timeline::before {
+content: ""; position: absolute;
+left: 14px; top: 12px; bottom: 12px;
+width: 2px; background: var(--border);
+}
+.reason-step {
+position: relative;
+padding: 14px 16px;
+background: var(--surface-soft);
+border-radius: var(--radius-sm);
+margin-bottom: 14px;
+border: 1px solid var(--border);
+transition: var(--transition);
+}
+.reason-step::before {
+content: attr(data-step);
+position: absolute;
+left: -32px; top: 14px;
+width: 30px; height: 30px;
+background: var(--surface);
+border: 2px solid var(--border);
+border-radius: 50%;
+display: flex; align-items: center; justify-content: center;
+font-size: 13px; font-weight: 700;
+color: var(--text-3);
+z-index: 2;
+font-feature-settings: "tnum";
+}
+.reason-step.done::before {
+background: var(--success); color: #fff; border-color: var(--success);
+content: "✓";
+}
+.reason-step.active {
+border-color: var(--primary);
+background: var(--primary-lighter);
+box-shadow: 0 4px 14px rgba(21, 101, 192, 0.10);
+}
+.reason-step.active::before {
+background: var(--primary); color: #fff; border-color: var(--primary);
+box-shadow: 0 0 0 4px rgba(21, 101, 192, 0.18);
+}
+.reason-step-header {
+display: flex; justify-content: space-between; align-items: center;
+margin-bottom: 6px;
+}
+.reason-step-title { font-size: 13.5px; font-weight: 600; color: var(--text-1); }
+.reason-step-tag {
+font-size: 10px;
+padding: 2px 8px;
+background: var(--bg);
+color: var(--text-3);
+border-radius: 10px;
+}
+.reason-step.active .reason-step-tag { background: var(--primary); color: #fff; }
+.reason-step.done .reason-step-tag { background: var(--success); color: #fff; }
+.reason-step-desc { font-size: 12.5px; color: var(--text-2); line-height: 1.6; }
+.reason-step-input {
+width: 100%; margin-top: 10px;
+padding: 10px;
+font-size: 12.5px;
+border: 1px solid var(--border);
+border-radius: 6px; font-family: inherit;
+resize: vertical; min-height: 60px;
+display: none;
+background: #fff;
+}
+.reason-step.active .reason-step-input { display: block; }
+.reason-step-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(21,101,192,0.1); }
+.reason-step-ref {
+margin-top: 10px; padding: 10px 12px;
+background: var(--success-light); border-radius: 6px;
+font-size: 12.5px; color: var(--success);
+border-left: 3px solid var(--success);
+display: none;
+line-height: 1.6;
+}
+.reason-step-ref strong { color: var(--text-1); }
+.reason-step.done .reason-step-ref { display: block; }
+.reason-action-bar {
+display: flex; gap: 10px; margin-top: 20px;
+flex-wrap: wrap; padding-top: 16px;
+border-top: 1px dashed var(--border);
+}
+/* 右侧结果 */
+.reason-result {
+background: var(--surface);
+border-radius: var(--radius-md);
+padding: 22px;
+box-shadow: var(--shadow-sm);
+border: 1px solid var(--border-soft);
+height: fit-content;
+}
+.reason-result-section { margin-bottom: 18px; }
+.reason-result-section:last-child { margin-bottom: 0; }
+.reason-result-title {
+font-size: 12.5px; font-weight: 600; color: var(--primary-dark);
+margin-bottom: 10px;
+display: flex; align-items: center; gap: 6px;
+padding-bottom: 6px;
+border-bottom: 1px dashed var(--border);
+}
+.reason-diff-list { list-style: none; }
+.reason-diff-item {
+padding: 9px 12px;
+background: var(--surface-soft); border-radius: 6px;
+margin-bottom: 6px; font-size: 12px;
+color: var(--text-2);
+display: flex; justify-content: space-between; align-items: center;
+border-left: 2px solid transparent;
+transition: var(--transition);
+}
+.reason-diff-item:hover { background: var(--primary-light); }
+.reason-diff-item[data-prob="extreme"] { border-left-color: var(--danger); }
+.reason-diff-item[data-prob="high"] { border-left-color: var(--warning); }
+.reason-diff-item[data-prob="mid"] { border-left-color: var(--accent); }
+.reason-diff-prob {
+font-weight: 600; font-size: 10px; padding: 3px 9px;
+border-radius: 20px;
+}
+.reason-diff-item[data-prob="extreme"] .reason-diff-prob { background: var(--danger-light); color: var(--danger); }
+.reason-diff-item[data-prob="high"] .reason-diff-prob { background: var(--warning-light); color: var(--warning); }
+.reason-diff-item[data-prob="mid"] .reason-diff-prob { background: var(--accent-light); color: var(--accent); }
+.reason-diff-item[data-prob="low"] .reason-diff-prob { background: var(--bg); color: var(--text-3); }
+.reason-final-diag {
+padding: 14px;
+background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+border-radius: var(--radius-sm);
+border-left: 3px solid var(--success);
+font-size: 13px;
+font-weight: 600;
+color: var(--success);
+text-align: center;
+line-height: 1.5;
+}
+.reason-final-diag small {
+display: block; margin-top: 6px;
+font-weight: 400; opacity: 0.85;
+font-size: 11.5px;
+}
+.reason-feedback-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.reason-feedback-tag {
+padding: 5px 11px;
+font-size: 11px;
+border-radius: 20px;
+background: var(--primary-light);
+color: var(--primary);
+font-weight: 500;
+}
+.reason-feedback-tag.success { background: var(--success-light); color: var(--success); }
+.reason-feedback-tag.warn { background: var(--warning-light); color: var(--warning); }
+.reason-feedback-tag.danger { background: var(--danger-light); color: var(--danger); }
+.reason-treatment-list {
+list-style: none;
+font-size: 12px; color: var(--text-2); line-height: 1.7;
+}
+.reason-treatment-list li {
+padding: 5px 0;
+display: flex; gap: 8px;
+align-items: flex-start;
+}
+.reason-treatment-list .num {
+width: 18px; height: 18px;
+background: var(--primary); color: #fff;
+border-radius: 50%;
+display: flex; align-items: center; justify-content: center;
+font-size: 10px; font-weight: 600;
+flex-shrink: 0;
+margin-top: 2px;
+}
+/* ============ 模块五:学情反馈 ============ */
+.feedback-grid {
+display: grid;
+grid-template-columns: 2fr 1fr;
+gap: 18px;
+margin-bottom: 18px;
+}
+.ability-cards {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 14px;
+}
+.ability-card {
+background: var(--surface);
+padding: 18px;
+border-radius: var(--radius-md);
+box-shadow: var(--shadow-sm);
+text-align: center;
+position: relative;
+border: 1px solid var(--border-soft);
+transition: var(--transition);
+}
+.ability-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.ability-name {
+font-size: 13px; color: var(--text-2); margin-bottom: 10px;
+font-weight: 500;
+}
+.ability-score-wrap {
+position: relative;
+width: 110px; height: 110px;
+margin: 0 auto 10px;
+}
+.ability-score-wrap svg { transform: rotate(-90deg); }
+.ability-score-text {
+position: absolute;
+top: 50%; left: 50%;
+transform: translate(-50%, -50%);
+font-size: 24px; font-weight: 700; color: var(--text-1);
+font-feature-settings: "tnum";
+}
+.ability-score-text small { font-size: 10px; color: var(--text-3); font-weight: 400; display: block; margin-top: -4px; }
+.ability-tag {
+display: inline-block;
+padding: 4px 12px;
+font-size: 11px;
+border-radius: 20px;
+font-weight: 500;
+}
+.ability-tag.good { background: var(--success-light); color: var(--success); }
+.ability-tag.mid { background: var(--warning-light); color: var(--warning); }
+.ability-tag.weak { background: var(--danger-light); color: var(--danger); }
+.ability-trend {
+font-size: 10px; color: var(--text-4);
+margin-top: 6px;
+}
+/* 短板列表 */
+.weak-list { list-style: none; }
+.weak-item {
+display: flex; justify-content: space-between; align-items: center;
+padding: 12px 14px;
+margin-bottom: 8px;
+background: #fff5f5;
+border-radius: var(--radius-sm);
+border-left: 3px solid var(--danger);
+transition: var(--transition);
+}
+.weak-item:hover { background: #ffeded; }
+.weak-item-name { font-size: 13px; color: var(--text-1); font-weight: 500; }
+.weak-item-meta {
+font-size: 11px; color: var(--text-3); margin-top: 4px;
+display: flex; align-items: center; gap: 8px;
+}
+.weak-item-action {
+font-size: 11px; color: var(--primary); cursor: pointer;
+padding: 5px 12px; background: var(--primary-light);
+border-radius: 20px;
+transition: var(--transition);
+font-weight: 500;
+white-space: nowrap;
+}
+.weak-item-action:hover { background: var(--primary); color: #fff; }
+/* 建议卡片 */
+.advice-card {
+background: linear-gradient(135deg, #e7f1fc 0%, #e0f4f6 100%);
+padding: 16px 18px; border-radius: var(--radius-sm);
+margin-bottom: 12px;
+border-left: 3px solid var(--primary);
+position: relative;
+}
+.advice-card.term-mid { border-left-color: var(--accent); background: linear-gradient(135deg, #e0f4f6 0%, #f1f8e9 100%); }
+.advice-card.term-long { border-left-color: var(--success); background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); }
+.advice-card-title {
+font-size: 13px; font-weight: 600; color: var(--primary-dark);
+margin-bottom: 6px;
+display: flex; align-items: center; gap: 6px;
+}
+.advice-card.term-mid .advice-card-title { color: var(--accent); }
+.advice-card.term-long .advice-card-title { color: var(--success); }
+.advice-card-text { font-size: 12.5px; color: var(--text-2); line-height: 1.7; }
+.advice-card-target {
+margin-top: 8px;
+font-size: 11px; color: var(--text-3);
+padding-top: 8px;
+border-top: 1px dashed rgba(0,0,0,0.06);
+}
+/* ============ 模块六:疾病知识库 ============ */
+.disease-tabs {
+display: flex; gap: 8px; margin-bottom: 18px;
+background: var(--surface); padding: 10px;
+border-radius: var(--radius-md);
+box-shadow: var(--shadow-sm);
+border: 1px solid var(--border-soft);
+flex-wrap: wrap;
+}
+.disease-tab {
+padding: 10px 20px;
+border-radius: var(--radius-sm);
+cursor: pointer;
+font-size: 13px;
+color: var(--text-2);
+transition: var(--transition);
+font-weight: 500;
+display: flex; align-items: center; gap: 8px;
+}
+.disease-tab:hover { background: var(--primary-light); color: var(--primary); }
+.disease-tab.active {
+background: var(--gradient-primary);
+color: #fff;
+box-shadow: 0 4px 14px rgba(21,101,192,0.30);
+}
+.disease-tab-icon {
+width: 20px; height: 20px;
+background: rgba(0,0,0,0.05);
+border-radius: 50%;
+display: flex; align-items: center; justify-content: center;
+font-size: 11px; font-weight: 700;
+}
+.disease-tab.active .disease-tab-icon { background: rgba(255,255,255,0.25); }
+.disease-detail {
+background: var(--surface);
+border-radius: var(--radius-md);
+padding: 30px;
+box-shadow: var(--shadow-sm);
+border: 1px solid var(--border-soft);
+}
+.disease-header {
+padding-bottom: 22px; margin-bottom: 22px;
+border-bottom: 2px solid var(--border-soft);
+display: flex; justify-content: space-between; align-items: flex-start;
+gap: 24px; flex-wrap: wrap;
+}
+.disease-header-left { flex: 1; min-width: 280px; }
+.disease-name {
+font-size: 24px; font-weight: 700; color: var(--text-1);
+margin-bottom: 6px;
+display: flex; align-items: center; gap: 12px;
+}
+.disease-name-prefix {
+width: 6px; height: 28px;
+background: var(--gradient-primary);
+border-radius: 3px;
+display: inline-block;
+}
+.disease-en {
+font-size: 13px; color: var(--text-3);
+font-style: italic;
+padding-left: 18px;
+}
+.disease-key-tags {
+display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px;
+padding-left: 18px;
+}
+.disease-key-tag {
+padding: 5px 12px; font-size: 11px;
+background: var(--accent-light); color: var(--accent);
+border-radius: 20px; font-weight: 500;
+}
+.disease-quick-stats {
+display: grid;
+grid-template-columns: repeat(2, auto);
+gap: 8px;
+min-width: 240px;
+}
+.disease-quick-stat {
+background: var(--surface-soft);
+padding: 10px 14px;
+border-radius: var(--radius-sm);
+border: 1px solid var(--border-soft);
+}
+.disease-quick-stat-label { font-size: 11px; color: var(--text-3); }
+.disease-quick-stat-val {
+font-size: 14px; font-weight: 600; color: var(--text-1);
+margin-top: 2px;
+}
+/* 知识库高亮卡片 */
+.kb-highlight-row {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 14px;
+margin: 22px 0;
+}
+.kb-highlight-card {
+padding: 16px;
+background: linear-gradient(135deg, #f4f9ff 0%, #e8f4f7 100%);
+border-radius: var(--radius-sm);
+border-top: 3px solid var(--primary);
+transition: var(--transition);
+}
+.kb-highlight-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+.kb-highlight-title {
+font-size: 13px; font-weight: 600; color: var(--primary-dark);
+margin-bottom: 8px;
+display: flex; align-items: center; gap: 6px;
+}
+.kb-highlight-text { font-size: 12.5px; color: var(--text-2); line-height: 1.7; }
+.kb-highlight-card.warn { border-top-color: var(--warning); background: linear-gradient(135deg, #fffaf2 0%, #fff5e6 100%); }
+.kb-highlight-card.warn .kb-highlight-title { color: var(--warning); }
+.kb-highlight-card.success { border-top-color: var(--success); background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e9 100%); }
+.kb-highlight-card.success .kb-highlight-title { color: var(--success); }
+/* 折叠区 */
+.collapse-section {
+border: 1px solid var(--border);
+border-radius: var(--radius-sm);
+margin-bottom: 10px;
+overflow: hidden;
+transition: var(--transition);
+}
+.collapse-section:hover { border-color: rgba(21,101,192,0.2); }
+.collapse-header {
+display: flex; justify-content: space-between; align-items: center;
+padding: 14px 18px;
+background: var(--surface-soft);
+cursor: pointer;
+font-size: 14px; font-weight: 600;
+color: var(--text-1);
+transition: var(--transition);
+}
+.collapse-header:hover { background: var(--primary-light); }
+.collapse-header.open { background: var(--primary-light); color: var(--primary); }
+.collapse-header-left { display: flex; align-items: center; gap: 10px; }
+.collapse-header-num {
+width: 24px; height: 24px;
+background: var(--surface);
+color: var(--primary);
+border-radius: 50%;
+display: flex; align-items: center; justify-content: center;
+font-size: 11px; font-weight: 700;
+border: 1px solid var(--border);
+}
+.collapse-header.open .collapse-header-num { background: var(--primary); color: #fff; border-color: transparent; }
+.collapse-icon { transition: transform 0.3s; font-size: 11px; color: var(--text-3); }
+.collapse-header.open .collapse-icon { transform: rotate(180deg); color: var(--primary); }
+.collapse-body {
+display: none;
+padding: 18px 22px 18px 50px;
+font-size: 13px; color: var(--text-2); line-height: 1.85;
+background: #fff;
+border-top: 1px solid var(--border);
+}
+.collapse-body.open { display: block; animation: fadeUp 0.25s; }
+.collapse-body strong { color: var(--text-1); }
+.collapse-body ul { margin-left: 20px; margin-top: 6px; }
+.collapse-body li { margin-bottom: 5px; }
+.collapse-body em {
+background: var(--warning-light);
+color: var(--warning);
+font-style: normal;
+padding: 1px 6px;
+border-radius: 4px;
+font-size: 12px;
+font-weight: 500;
+}
+/* ============ 页脚 ============ */
+.footer {
+background: var(--surface);
+border-top: 1px solid var(--border);
+padding: 24px 40px;
+margin-top: 30px;
+}
+.footer-inner { max-width: 1600px; margin: 0 auto; }
+.disclaimer {
+background: linear-gradient(135deg, #fff3e0 0%, #ffe8cc 100%);
+padding: 14px 22px;
+border-radius: var(--radius-sm);
+font-size: 12.5px;
+color: #6d4c41;
+margin-bottom: 14px;
+border-left: 4px solid var(--warning);
+text-align: left;
+display: flex; align-items: center; gap: 12px;
+line-height: 1.6;
+}
+.disclaimer-icon {
+font-size: 22px;
+width: 36px; height: 36px;
+background: rgba(239,108,0,0.15);
+border-radius: 50%;
+display: flex; align-items: center; justify-content: center;
+flex-shrink: 0;
+}
+.footer-meta {
+display: flex; justify-content: space-between; align-items: center;
+flex-wrap: wrap; gap: 12px;
+}
+.footer-text {
+font-size: 12px; color: var(--text-3);
+display: flex; align-items: center; gap: 12px;
+}
+.footer-orient {
+font-size: 11.5px; color: var(--text-3);
+display: flex; gap: 14px; flex-wrap: wrap;
+}
+.footer-orient span {
+display: flex; align-items: center; gap: 4px;
+}
+.footer-orient span::before {
+content: ""; width: 4px; height: 4px;
+background: var(--accent); border-radius: 50%;
+}
+/* ============ 响应式 ============ */
+@media (max-width: 1400px) {
+.stat-grid, .module-cards { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 1200px) {
+.reason-layout { grid-template-columns: 1fr; }
+.feedback-grid { grid-template-columns: 1fr; }
+.ability-cards { grid-template-columns: repeat(2, 1fr); }
+.dash-row-2, .dash-row-3, .dash-row-2-1 { grid-template-columns: 1fr; }
+}
+@media (max-width: 900px) {
+.main-layout { flex-direction: column; }
+.sidebar { width: 100%; height: auto; position: relative; }
+.teach-layout { grid-template-columns: 1fr; }
+.top-banner { padding: 24px 20px; }
+.content { padding: 20px; }
+.ability-cards { grid-template-columns: 1fr; }
+.case-final-summary-grid { grid-template-columns: repeat(2, 1fr); }
+.stat-grid, .module-cards { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<!-- ============ 顶部横幅(英雄区) ============ -->
+<header class="top-banner">
+  <div class="banner-deco">⚕</div>
+  <div class="banner-inner">
+    <div class="banner-left">
+      <div class="banner-logo">
+        <div class="banner-logo-icon">⚕</div>
+        <div class="banner-title-group">
+          <div class="banner-title">
+            临床医学外科学教学辅助智能体
+            <span class="banner-version-tag">v 3.2 · 教学版</span>
+          </div>
+          <div class="banner-subtitle">Surgical Clinical Teaching Intelligent Assistant · 数智化外科教学综合平台</div>
+        </div>
+      </div>
+      <div class="banner-slogan">以病例为牵引,以临床思维为主线,以能力培养为核心 —— 构建外科学全流程智能化教学训练体系</div>
+      <div class="banner-tags">
+        <span class="banner-tag">⊕ 病例渐进式模拟</span>
+        <span class="banner-tag">⊕ 启发式虚拟带教</span>
+        <span class="banner-tag">⊕ 七步诊断推理</span>
+        <span class="banner-tag">⊕ 围手术期决策</span>
+        <span class="banner-tag">⊕ 多维能力画像</span>
+        <span class="banner-tag">⊕ 过程性学情反馈</span>
+      </div>
+    </div>
+    <div class="banner-status">
+      <div class="banner-status-title">
+        <span class="banner-status-pulse"></span>
+        当前状态 · 临床医学(外科方向)· 第三阶段
+      </div>
+      <div class="banner-status-row"><span>本周累计训练</span><span class="val">12.5 小时</span></div>
+      <div class="banner-status-row"><span>已完成病例</span><span class="val">28 例</span></div>
+      <div class="banner-status-row"><span>综合能力指数</span><span class="val">82.6 / 100</span></div>
+      <div class="banner-status-row"><span>当前训练等级</span><span class="val">中阶 · L4</span></div>
+      <div class="banner-status-row"><span>学习连续天数</span><span class="val">17 天 🔥</span></div>
+    </div>
+  </div>
+</header>
+<!-- ============ 主体布局 ============ -->
+<div class="main-layout">
+  <!-- 左侧导航 -->
+  <aside class="sidebar">
+    <div class="sidebar-section-title">主 导 航</div>
+    <div class="nav-item active" data-target="home">
+      <span class="nav-icon">⌂</span><span>首页总览</span>
+      <span class="nav-badge">仪表盘</span>
+    </div>
+    <div class="nav-item" data-target="teach">
+      <span class="nav-icon">👨‍⚕</span><span>外科虚拟带教</span>
+      <span class="nav-badge">5</span>
+    </div>
+    <div class="nav-item new" data-target="case">
+      <span class="nav-icon">⊞</span><span>病例模拟</span>
+      <span class="nav-badge">NEW</span>
+    </div>
+    <div class="nav-item" data-target="reason">
+      <span class="nav-icon">⌬</span><span>诊断推理</span>
+      <span class="nav-badge">7步</span>
+    </div>
+    <div class="nav-item" data-target="feedback">
+      <span class="nav-icon">◴</span><span>学情反馈</span>
+    </div>
+    <div class="nav-item" data-target="library">
+      <span class="nav-icon">⎙</span><span>疾病知识库</span>
+      <span class="nav-badge">5+</span>
+    </div>
+<div class="sidebar-divider"></div>
+
+<div class="sidebar-section-title">本 周 重 点</div>
+<div class="sidebar-card">
+  <div class="sidebar-card-title">⛯ 训练焦点</div>
+  <ul class="sidebar-card-list">
+    <li>原发性肝癌术前评估</li>
+    <li>门脉高压急诊处理</li>
+    <li>急性胰腺炎严重度</li>
+  </ul>
+  <div class="sidebar-mini-stat">
+    <div class="sidebar-mini-stat-cell">
+      <div class="val">68%</div>
+      <div class="lbl">完成进度</div>
+    </div>
+    <div class="sidebar-mini-stat-cell">
+      <div class="val">17d</div>
+      <div class="lbl">连续训练</div>
+    </div>
+  </div>
+</div>
+  </aside>
+  <!-- 主内容区 -->
+  <main class="content">
+<!-- ============ 模块一:首页总览 ============ -->
+<section class="module active" id="home">
+  <div class="module-header">
+    <div class="module-title-block">
+      <div class="module-title-icon">⌂</div>
+      <div>
+        <div class="module-title">学习总览仪表盘</div>
+        <div class="module-title-sub">实时呈现训练进度、能力画像、学情趋势与个性化学习建议</div>
+      </div>
+    </div>
+    <div class="module-actions">
+      <button class="btn btn-outline">⤓ 导出学情报告</button>
+      <button class="btn btn-outline">📅 周计划</button>
+      <button class="btn btn-primary">▶ 继续上次训练</button>
+    </div>
+  </div>
+
+  <!-- 顶部数据卡片 -->
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-header">
+        <div class="stat-label">已完成训练</div>
+        <div class="stat-icon-mini">⊞</div>
+      </div>
+      <div class="stat-value">28<span class="stat-unit">例次</span></div>
+      <div class="spark-bar">
+        <div style="height:35%"></div><div style="height:60%"></div><div style="height:45%"></div>
+        <div style="height:75%"></div><div style="height:55%"></div><div style="height:80%"></div>
+        <div style="height:90%"></div>
+      </div>
+      <div class="stat-meta">
+        <span class="stat-trend">↑ 较上周 +18.2%</span>
+        <span class="stat-secondary">近 7 日</span>
+      </div>
+    </div>
+    <div class="stat-card accent">
+      <div class="stat-header">
+        <div class="stat-label">学习总进度</div>
+        <div class="stat-icon-mini">◴</div>
+      </div>
+      <div class="stat-value">68<span class="stat-unit">%</span></div>
+      <div class="progress-bar" style="margin-top:8px;">
+        <div class="progress-fill accent" style="width:68%"></div>
+      </div>
+      <div class="stat-meta">
+        <span class="stat-trend">外科学核心模块</span>
+        <span class="stat-secondary">还需 32%</span>
+      </div>
+    </div>
+    <div class="stat-card success">
+      <div class="stat-header">
+        <div class="stat-label">综合能力指数</div>
+        <div class="stat-icon-mini">★</div>
+      </div>
+      <div class="stat-value">82.6<span class="stat-unit">/100</span></div>
+      <div class="spark-bar">
+        <div style="height:50%"></div><div style="height:55%"></div><div style="height:60%"></div>
+        <div style="height:65%"></div><div style="height:72%"></div><div style="height:78%"></div>
+        <div style="height:85%"></div>
+      </div>
+      <div class="stat-meta">
+        <span class="stat-trend">↑ 临床思维突出</span>
+        <span class="stat-secondary">中阶 L4</span>
+      </div>
+    </div>
+    <div class="stat-card warning">
+      <div class="stat-header">
+        <div class="stat-label">当前训练焦点</div>
+        <div class="stat-icon-mini">⚑</div>
+      </div>
+      <div class="stat-value" style="font-size:18px; padding-top:6px; line-height:1.3;">围手术期决策<br><small style="font-size:12px; color:var(--text-3); font-weight:400;">+ 并发症识别</small></div>
+      <div class="stat-meta">
+        <span class="stat-trend warn">需提升 · 当前 69 分</span>
+        <span class="stat-secondary">优先专项</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 四大核心模块入口 -->
+  <div class="module-cards">
+    <div class="module-card" onclick="switchModule('teach')">
+      <div class="module-card-header">
+        <div class="module-card-icon">👨‍⚕</div>
+        <div class="module-card-counter">5 个疾病专题</div>
+      </div>
+      <div class="module-card-title">外科虚拟带教</div>
+      <div class="module-card-desc">模拟教师床旁查房与启发式追问,引导学员逐步建立外科临床思维</div>
+      <div class="module-card-footer">
+        <span>已完成 15 / 25 课时</span>
+        <span class="pct">60%</span>
+      </div>
+    </div>
+    <div class="module-card" onclick="switchModule('case')">
+      <div class="module-card-header">
+        <div class="module-card-icon accent">⊞</div>
+        <div class="module-card-counter">3 个难度等级</div>
+      </div>
+      <div class="module-card-title">手术相关病例模拟</div>
+      <div class="module-card-desc">分级病例渐进式推进,围绕术前-术中-术后全流程沉浸式训练</div>
+      <div class="module-card-footer">
+        <span>已完成 28 / 34 例</span>
+        <span class="pct">82%</span>
+      </div>
+    </div>
+    <div class="module-card" onclick="switchModule('reason')">
+      <div class="module-card-header">
+        <div class="module-card-icon success">⌬</div>
+        <div class="module-card-counter">七步推理法</div>
+      </div>
+      <div class="module-card-title">外科诊断推理</div>
+      <div class="module-card-desc">基于症状-体征-检查的结构化推理链,训练定位、定性、定型诊断思维</div>
+      <div class="module-card-footer">
+        <span>已完成 18 / 29 案例</span>
+        <span class="pct">62%</span>
+      </div>
+    </div>
+    <div class="module-card" onclick="switchModule('feedback')">
+      <div class="module-card-header">
+        <div class="module-card-icon warning">◴</div>
+        <div class="module-card-counter">六维评价体系</div>
+      </div>
+      <div class="module-card-title">学情反馈分析</div>
+      <div class="module-card-desc">多维能力画像与个性化学习建议,精准定位短板与提升路径</div>
+      <div class="module-card-footer">
+        <span>本周生成 12 份报告</span>
+        <span class="pct">实时</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第一行:今日学习建议 + 学习能力画像 -->
+  <div class="dash-row dash-row-2">
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">今日学习建议 <span class="panel-title-extra">· 智能推荐 5 项</span></div>
+        <div class="panel-link">查看全部 ›</div>
+      </div>
+      <ul class="recommend-list">
+        <li class="recommend-item">
+          <div class="recommend-info">
+            <span class="recommend-tag primary">⛯ 必修</span>
+            <div>
+              <div class="recommend-text">完成「门脉高压症合并上消化道出血」中级病例 1 例</div>
+              <div class="recommend-meta">预计 25 分钟 · 解锁第二阶段进阶训练</div>
+            </div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="switchModule('case')">开始</button>
+        </li>
+        <li class="recommend-item">
+          <div class="recommend-info">
+            <span class="recommend-tag warn">⚠ 短板</span>
+            <div>
+              <div class="recommend-text">复习胰腺炎严重程度分级:Ranson、APACHE Ⅱ、BISAP 评分体系</div>
+              <div class="recommend-meta">薄弱环节 · 上次正确率 58%</div>
+            </div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="goToDisease('pancreatitis')">前往</button>
+        </li>
+        <li class="recommend-item">
+          <div class="recommend-info">
+            <span class="recommend-tag">📚 复习</span>
+            <div>
+              <div class="recommend-text">原发性肝癌肝功能储备评估:Child-Pugh 与 ICG-R15 综合应用</div>
+              <div class="recommend-meta">教学重点 · 配套虚拟带教 3 题</div>
+            </div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="goToDisease('liver')">前往</button>
+        </li>
+        <li class="recommend-item">
+          <div class="recommend-info">
+            <span class="recommend-tag danger">⊗ 紧迫</span>
+            <div>
+              <div class="recommend-text">加强术后并发症识别专项:出血、感染、瘘管、栓塞早期识别</div>
+              <div class="recommend-meta">能力画像短板 · 当前 68 分</div>
+            </div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="switchModule('teach')">训练</button>
+        </li>
+        <li class="recommend-item">
+          <div class="recommend-info">
+            <span class="recommend-tag success">★ 拓展</span>
+            <div>
+              <div class="recommend-text">参加「急性阑尾炎不典型表现的鉴别诊断」启发式查房</div>
+              <div class="recommend-meta">优势模块巩固 · 推荐高级教学场景</div>
+            </div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="switchModule('teach')">参加</button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">学习能力画像</div>
+        <div class="panel-link">详细分析 ›</div>
+      </div>
+      <div class="radar-container">
+        <svg class="radar-svg" viewBox="0 0 340 290">
+          <defs>
+            <radialGradient id="radarGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#1565c0" stop-opacity="0.30"/>
+              <stop offset="100%" stop-color="#00838f" stop-opacity="0.15"/>
+            </radialGradient>
+          </defs>
+          <!-- 背景多边形 -->
+          <g fill="none" stroke="#e3e9f2" stroke-width="1">
+            <polygon points="170,40 274,100 274,210 170,270 66,210 66,100"/>
+            <polygon points="170,72 250,116 250,194 170,238 90,194 90,116"/>
+            <polygon points="170,104 226,132 226,178 170,206 114,178 114,132"/>
+            <polygon points="170,136 202,148 202,162 170,174 138,162 138,148"/>
+          </g>
+          <!-- 轴线 -->
+          <g stroke="#e3e9f2" stroke-width="1">
+            <line x1="170" y1="155" x2="170" y2="40"/>
+            <line x1="170" y1="155" x2="274" y2="100"/>
+            <line x1="170" y1="155" x2="274" y2="210"/>
+            <line x1="170" y1="155" x2="170" y2="270"/>
+            <line x1="170" y1="155" x2="66" y2="210"/>
+            <line x1="170" y1="155" x2="66" y2="100"/>
+          </g>
+          <!-- 数据多边形 -->
+          <polygon points="170,55 256,107 240,196 170,247 82,200 90,113"
+                   fill="url(#radarGrad)"
+                   stroke="#1565c0" stroke-width="2.5"/>
+          <!-- 数据点 -->
+          <g fill="#1565c0">
+            <circle cx="170" cy="55" r="5" stroke="#fff" stroke-width="2"/>
+            <circle cx="256" cy="107" r="5" stroke="#fff" stroke-width="2"/>
+            <circle cx="240" cy="196" r="5" stroke="#fff" stroke-width="2"/>
+            <circle cx="170" cy="247" r="5" stroke="#fff" stroke-width="2"/>
+            <circle cx="82" cy="200" r="5" stroke="#fff" stroke-width="2"/>
+            <circle cx="90" cy="113" r="5" stroke="#fff" stroke-width="2"/>
+          </g>
+          <!-- 标签 -->
+          <g font-size="11.5" fill="#3a4d6e" text-anchor="middle" font-weight="500">
+            <text x="170" y="32">临床思维</text>
+            <text x="290" y="100">术前评估</text>
+            <text x="290" y="220">手术决策</text>
+            <text x="170" y="288">术后管理</text>
+            <text x="50" y="220">并发症识别</text>
+            <text x="50" y="100">基础知识</text>
+          </g>
+        </svg>
+        <div class="radar-legend">
+          <div class="radar-legend-item"><span class="name">⊕ 临床思维</span><span class="score">88</span></div>
+          <div class="radar-legend-item"><span class="name">⊕ 术前评估</span><span class="score">85</span></div>
+          <div class="radar-legend-item mid"><span class="name">⊕ 手术决策</span><span class="score">71</span></div>
+          <div class="radar-legend-item mid"><span class="name">⊕ 术后管理</span><span class="score">76</span></div>
+          <div class="radar-legend-item weak"><span class="name">⊕ 并发症识别</span><span class="score">68</span></div>
+          <div class="radar-legend-item"><span class="name">⊕ 基础知识</span><span class="score">90</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第二行:重点疾病 + 最近表现 + 训练日历 -->
+  <div class="dash-row dash-row-3">
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">重点疾病入口</div>
+        <div class="panel-link">完整列表 ›</div>
+      </div>
+      <div class="disease-shortcut">
+        <div class="disease-chip" onclick="goToDisease('liver')">
+          <div class="disease-chip-icon">肝</div>
+          <div class="disease-chip-info">
+            <div class="disease-chip-name">原发性肝癌</div>
+            <div class="disease-chip-meta">完成度 75%</div>
+            <div class="disease-chip-pct"><div class="disease-chip-pct-fill" style="width:75%"></div></div>
+          </div>
+        </div>
+        <div class="disease-chip" onclick="goToDisease('portal')">
+          <div class="disease-chip-icon">门</div>
+          <div class="disease-chip-info">
+            <div class="disease-chip-name">门脉高压症</div>
+            <div class="disease-chip-meta">完成度 60%</div>
+            <div class="disease-chip-pct"><div class="disease-chip-pct-fill" style="width:60%"></div></div>
+          </div>
+        </div>
+        <div class="disease-chip" onclick="goToDisease('gallstone')">
+          <div class="disease-chip-icon">胆</div>
+          <div class="disease-chip-info">
+            <div class="disease-chip-name">胆石症</div>
+            <div class="disease-chip-meta">完成度 82%</div>
+            <div class="disease-chip-pct"><div class="disease-chip-pct-fill" style="width:82%"></div></div>
+          </div>
+        </div>
+        <div class="disease-chip" onclick="goToDisease('pancreatitis')">
+          <div class="disease-chip-icon">胰</div>
+          <div class="disease-chip-info">
+            <div class="disease-chip-name">急性胰腺炎</div>
+            <div class="disease-chip-meta">完成度 55%</div>
+            <div class="disease-chip-pct"><div class="disease-chip-pct-fill" style="width:55%"></div></div>
+          </div>
+        </div>
+        <div class="disease-chip" onclick="goToDisease('appendicitis')">
+          <div class="disease-chip-icon">阑</div>
+          <div class="disease-chip-info">
+            <div class="disease-chip-name">急性阑尾炎</div>
+            <div class="disease-chip-meta">完成度 91%</div>
+            <div class="disease-chip-pct"><div class="disease-chip-pct-fill" style="width:91%"></div></div>
+          </div>
+        </div>
+        <div class="disease-chip" onclick="switchModule('library')">
+          <div class="disease-chip-icon" style="background:var(--gradient-primary); color:#fff;">+</div>
+          <div class="disease-chip-info">
+            <div class="disease-chip-name">扩展疾病模块</div>
+            <div class="disease-chip-meta">即将上线 12 个</div>
+            <div class="disease-chip-pct"><div class="disease-chip-pct-fill" style="width:25%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">最近病例训练表现</div>
+        <div class="panel-link">本月汇总 ›</div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label">
+          <div>
+            <div>原发性肝癌·术前评估</div>
+            <div class="meta">11月18日 · 中级 · 用时 22′</div>
+          </div>
+          <div class="right"><span class="score-num">92</span></div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill success" style="width:92%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label">
+          <div>
+            <div>急性胆管炎·急诊处理</div>
+            <div class="meta">11月17日 · 高级 · 用时 28′</div>
+          </div>
+          <div class="right"><span class="score-num">85</span></div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:85%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label">
+          <div>
+            <div>门脉高压症·急性出血</div>
+            <div class="meta">11月15日 · 高级 · 用时 35′</div>
+          </div>
+          <div class="right"><span class="score-num">74</span></div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill warning" style="width:74%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label">
+          <div>
+            <div>急性胰腺炎·分级处理</div>
+            <div class="meta">11月13日 · 中级 · 用时 31′</div>
+          </div>
+          <div class="right"><span class="score-num">62</span></div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill danger" style="width:62%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label">
+          <div>
+            <div>急性阑尾炎·鉴别诊断</div>
+            <div class="meta">11月11日 · 初级 · 用时 16′</div>
+          </div>
+          <div class="right"><span class="score-num">89</span></div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill success" style="width:89%"></div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">近 4 周训练热力图</div>
+        <div class="panel-link">详细日历 ›</div>
+      </div>
+      <!-- 4周 x 7天 = 28格 -->
+      <div class="activity-heatmap" id="heatmap"></div>
+      <div class="heatmap-legend">
+        <span>训练强度</span>
+        <span class="lvl heatmap-cell" data-level="0"></span>
+        <span class="lvl heatmap-cell" data-level="1"></span>
+        <span class="lvl heatmap-cell" data-level="2"></span>
+        <span class="lvl heatmap-cell" data-level="3"></span>
+        <span class="lvl heatmap-cell" data-level="4"></span>
+        <span class="lvl heatmap-cell" data-level="5"></span>
+        <span>密集</span>
+      </div>
+
+      <div class="panel-header" style="margin-top:18px;">
+        <div class="panel-title">本周训练时间分布</div>
+      </div>
+      <div class="time-distribution">
+        <div class="time-bar-group">
+          <div class="time-bar-stack" style="height:50%;">
+            <div class="time-bar-seg case" style="height:60%;"></div>
+            <div class="time-bar-seg teach" style="height:25%;"></div>
+            <div class="time-bar-seg reason" style="height:15%;"></div>
+          </div>
+          <div class="time-bar-label">周一</div>
+        </div>
+        <div class="time-bar-group">
+          <div class="time-bar-stack" style="height:75%;">
+            <div class="time-bar-seg case" style="height:50%;"></div>
+            <div class="time-bar-seg teach" style="height:30%;"></div>
+            <div class="time-bar-seg reason" style="height:15%;"></div>
+            <div class="time-bar-seg kb" style="height:5%;"></div>
+          </div>
+          <div class="time-bar-label">周二</div>
+        </div>
+        <div class="time-bar-group">
+          <div class="time-bar-stack" style="height:90%;">
+            <div class="time-bar-seg case" style="height:55%;"></div>
+            <div class="time-bar-seg teach" style="height:25%;"></div>
+            <div class="time-bar-seg reason" style="height:15%;"></div>
+            <div class="time-bar-seg kb" style="height:5%;"></div>
+          </div>
+          <div class="time-bar-label">周三</div>
+        </div>
+        <div class="time-bar-group">
+          <div class="time-bar-stack" style="height:65%;">
+            <div class="time-bar-seg case" style="height:45%;"></div>
+            <div class="time-bar-seg teach" style="height:35%;"></div>
+            <div class="time-bar-seg reason" style="height:20%;"></div>
+          </div>
+          <div class="time-bar-label">周四</div>
+        </div>
+        <div class="time-bar-group">
+          <div class="time-bar-stack" style="height:85%;">
+            <div class="time-bar-seg case" style="height:60%;"></div>
+            <div class="time-bar-seg teach" style="height:20%;"></div>
+            <div class="time-bar-seg reason" style="height:15%;"></div>
+            <div class="time-bar-seg kb" style="height:5%;"></div>
+          </div>
+          <div class="time-bar-label">周五</div>
+        </div>
+        <div class="time-bar-group">
+          <div class="time-bar-stack" style="height:60%;">
+            <div class="time-bar-seg case" style="height:40%;"></div>
+            <div class="time-bar-seg teach" style="height:30%;"></div>
+            <div class="time-bar-seg reason" style="height:25%;"></div>
+            <div class="time-bar-seg kb" style="height:5%;"></div>
+          </div>
+          <div class="time-bar-label">周六</div>
+        </div>
+        <div class="time-bar-group">
+          <div class="time-bar-stack" style="height:40%;">
+            <div class="time-bar-seg case" style="height:30%;"></div>
+            <div class="time-bar-seg kb" style="height:70%;"></div>
+          </div>
+          <div class="time-bar-label">周日</div>
+        </div>
+      </div>
+      <div class="time-legend">
+        <div class="time-legend-item"><div class="time-legend-dot" style="background:var(--primary)"></div>病例模拟</div>
+        <div class="time-legend-item"><div class="time-legend-dot" style="background:var(--accent)"></div>虚拟带教</div>
+        <div class="time-legend-item"><div class="time-legend-dot" style="background:#4dd0e1"></div>诊断推理</div>
+        <div class="time-legend-item"><div class="time-legend-dot" style="background:#80deea"></div>知识库</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第三行:教学导向说明 -->
+  <div class="dash-row" style="grid-template-columns: 1fr;">
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">教学导向与平台理念</div>
+        <div class="panel-link">教学说明 ›</div>
+      </div>
+      <div class="teaching-orient">
+        <div class="teaching-orient-title">⛯ 平台核心教学理念</div>
+        <div class="teaching-orient-text">
+          本平台围绕<strong>外科临床思维培养</strong>构建,强调<strong>以病例为牵引、以问题为导向、以能力为核心</strong>的现代医学教学路径。
+          通过虚拟带教、病例模拟、推理训练与学情反馈四大功能闭环,系统训练学员的术前评估、围手术期决策、术后管理与并发症识别能力,
+          强化对外科疾病诊治<strong>"判断—决策—执行—评价"</strong>全过程的理解与应用,助力医学生与规培医师建立扎实的外科临床实践能力,
+          实现从<strong>"知识掌握"</strong>到<strong>"能力转化"</strong>的飞跃。
+        </div>
+        <div class="orient-pillars">
+          <div class="orient-pillar">
+            <div class="orient-pillar-num">壹</div>
+            以病例为牵引
+          </div>
+          <div class="orient-pillar">
+            <div class="orient-pillar-num">贰</div>
+            以临床思维为主线
+          </div>
+          <div class="orient-pillar">
+            <div class="orient-pillar-num">叁</div>
+            以能力培养为核心
+          </div>
+          <div class="orient-pillar">
+            <div class="orient-pillar-num">肆</div>
+            以外科实践为重点
+          </div>
+          <div class="orient-pillar">
+            <div class="orient-pillar-num">伍</div>
+            以过程性反馈为支撑
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 模块二:外科虚拟带教 ============ -->
+<section class="module" id="teach">
+  <div class="module-header">
+    <div class="module-title-block">
+      <div class="module-title-icon">👨‍⚕</div>
+      <div>
+        <div class="module-title">外科虚拟带教</div>
+        <div class="module-title-sub">模拟临床教师床旁查房与启发式追问 · 由浅入深的层层推进</div>
+      </div>
+    </div>
+    <div class="module-actions">
+      <button class="btn btn-outline" onclick="resetTeach()">↻ 重新开始</button>
+      <button class="btn btn-outline" onclick="prevTeachQuestion()">← 上一题</button>
+      <button class="btn btn-primary" onclick="nextTeachQuestion()">下一教学问题 →</button>
+    </div>
+  </div>
+
+  <div class="teach-layout">
+    <!-- 左侧任务列表 -->
+    <div class="teach-task-list">
+      <div class="panel-title" style="margin-bottom:14px; font-size:14px;">教学疾病选择</div>
+      <div class="teach-disease-select" id="teachDiseaseSelect">
+        <span class="teach-disease-btn active" data-disease="liver">原发性肝癌</span>
+        <span class="teach-disease-btn" data-disease="portal">门脉高压症</span>
+        <span class="teach-disease-btn" data-disease="gallstone">胆石症</span>
+        <span class="teach-disease-btn" data-disease="pancreatitis">急性胰腺炎</span>
+        <span class="teach-disease-btn" data-disease="appendicitis">急性阑尾炎</span>
+      </div>
+
+      <div class="panel-title" style="margin-bottom:8px; font-size:14px;">教学进度</div>
+      <div class="teach-progress-line">
+        <div class="teach-progress-line-fill" id="teachProgressFill" style="width:20%"></div>
+      </div>
+
+      <div class="panel-title" style="margin-bottom:12px; font-size:14px;">教学任务问题列表</div>
+      <ul class="teach-question-list" id="teachQuestionList"></ul>
+    </div>
+
+    <!-- 右侧主区 -->
+    <div class="teach-main">
+      <div class="teach-scene" id="teachScene">
+        <div class="teach-scene-header">
+          <div class="teach-scene-label">⛯ 临床教学场景</div>
+          <div class="teach-scene-meta" id="teachSceneMeta">床旁查房 · 启发式追问</div>
+        </div>
+        <div class="teach-scene-text" id="teachSceneText"></div>
+      </div>
+
+      <div class="teach-current-q">
+        <div class="teach-current-q-header">
+          <div class="teach-current-q-label" id="teachQLabel">⛯ 教学问题 1 / 5</div>
+          <div class="teach-current-q-type" id="teachQType">问诊与病史采集</div>
+        </div>
+        <div class="teach-current-q-text" id="teachQText"></div>
+        <div class="teach-current-q-prompt" id="teachQPrompt"></div>
+      </div>
+
+      <div class="teach-input-block">
+        <div class="teach-input-label">
+          <span>⌨ 您的回答与思考过程</span>
+          <span class="word-count" id="teachWordCount">0 字</span>
+        </div>
+        <textarea class="teach-answer-box" id="teachAnswer" oninput="updateWordCount()" placeholder="请围绕病史采集、体征分析、辅助检查解读、诊断推理、围手术期决策等方面系统作答……结合临床思维要点,层次清晰地阐述判断依据。"></textarea>
+      </div>
+
+      <div class="teach-action-bar">
+        <button class="btn btn-primary" onclick="showTeachReference()">⌧ 查看参考要点</button>
+        <button class="btn btn-success" onclick="showTeachComment()">👨‍⚕ 教师点评</button>
+        <button class="btn btn-warning" onclick="showTeachWarn()">⚠ 易错点提示</button>
+        <button class="btn btn-outline" onclick="showTeachSummary()">⊙ 本轮小结</button>
+      </div>
+
+      <div class="teach-feedback-block ref" id="teachFeedbackRef">
+        <div class="teach-feedback-block-head">⌧ 参考要点 · 临床带教标准答案</div>
+        <div class="teach-feedback-block-body" id="teachFeedbackRefText"></div>
+      </div>
+
+      <div class="teach-feedback-block comment" id="teachFeedbackComment">
+        <div class="teach-feedback-block-head">👨‍⚕ 教师点评 · 临床思维评价</div>
+        <div class="teach-feedback-block-body" id="teachFeedbackCommentText"></div>
+      </div>
+
+      <div class="teach-feedback-block warn" id="teachFeedbackWarn">
+        <div class="teach-feedback-block-head">⚠ 临床易错点提醒 · 必须警惕</div>
+        <div class="teach-feedback-block-body" id="teachFeedbackWarnText"></div>
+      </div>
+
+      <div class="teach-feedback-block summary" id="teachFeedbackSummary">
+        <div class="teach-feedback-block-head">⌬ 本轮教学小结 · 临床思维要点回顾</div>
+        <div class="teach-feedback-block-body" id="teachFeedbackSummaryText"></div>
+      </div>
+
+      <div class="teach-takeaway">
+        <div class="teach-takeaway-title">⊕ 临床思维带回家(Take-Home Message)</div>
+        <div class="teach-takeaway-text" id="teachTakeaway"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 模块三:病例模拟 ============ -->
+<section class="module" id="case">
+  <div class="module-header">
+    <div class="module-title-block">
+      <div class="module-title-icon">⊞</div>
+      <div>
+        <div class="module-title">手术相关病例模拟</div>
+        <div class="module-title-sub">分阶段渐进式推进 · 沉浸式术前-术中-术后全流程训练</div>
+      </div>
+    </div>
+    <div class="module-actions">
+      <button class="btn btn-outline" onclick="resetCase()">↻ 重置病例</button>
+      <button class="btn btn-primary" onclick="enterCase()">▶ 进入病例</button>
+    </div>
+  </div>
+
+  <!-- 病例选择控件 -->
+  <div class="case-control">
+    <div class="case-filter-group">
+      <span class="case-filter-label">⊕ 病例疾病</span>
+      <div class="case-filter-options" id="caseDiseaseOptions">
+        <span class="case-filter-btn active" data-case="liver">原发性肝癌·术前评估</span>
+        <span class="case-filter-btn" data-case="portal">门脉高压·急诊出血</span>
+        <span class="case-filter-btn" data-case="gallstone">胆石症·围手术期决策</span>
+        <span class="case-filter-btn" data-case="pancreatitis">胰腺炎·分级处理</span>
+        <span class="case-filter-btn" data-case="appendicitis">阑尾炎·鉴别与时机</span>
+      </div>
+    </div>
+    <div class="case-filter-group">
+      <span class="case-filter-label">★ 难度</span>
+      <div class="case-filter-options" id="caseLevelOptions">
+        <span class="case-filter-btn" data-level="初级">初级</span>
+        <span class="case-filter-btn active" data-level="中级">中级</span>
+        <span class="case-filter-btn" data-level="高级">高级</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 阶段进度 -->
+  <div class="case-progress" id="caseProgress">
+    <div class="case-step active" data-stage="0"><div class="case-step-circle"><span class="step-num">1</span></div><div class="case-step-label">主诉与病史</div></div>
+    <div class="case-step" data-stage="1"><div class="case-step-circle"><span class="step-num">2</span></div><div class="case-step-label">体格检查</div></div>
+    <div class="case-step" data-stage="2"><div class="case-step-circle"><span class="step-num">3</span></div><div class="case-step-label">辅助检查</div></div>
+    <div class="case-step" data-stage="3"><div class="case-step-circle"><span class="step-num">4</span></div><div class="case-step-label">初步判断</div></div>
+    <div class="case-step" data-stage="4"><div class="case-step-circle"><span class="step-num">5</span></div><div class="case-step-label">术前决策</div></div>
+    <div class="case-step" data-stage="5"><div class="case-step-circle"><span class="step-num">6</span></div><div class="case-step-label">手术方案</div></div>
+    <div class="case-step" data-stage="6"><div class="case-step-circle"><span class="step-num">7</span></div><div class="case-step-label">围手术期管理</div></div>
+    <div class="case-step" data-stage="7"><div class="case-step-circle"><span class="step-num">8</span></div><div class="case-step-label">术后并发症</div></div>
+    <div class="case-step" data-stage="8"><div class="case-step-circle"><span class="step-num">9</span></div><div class="case-step-label">病例总结</div></div>
+  </div>
+
+  <!-- 病例内容 -->
+  <div class="case-content-area">
+    <div class="case-info-header">
+      <div>
+        <div class="case-info-title">
+          <div class="case-info-title-icon">肝</div>
+          <span id="caseTitle">原发性肝癌的术前评估与手术决策</span>
+        </div>
+        <div class="case-info-meta" id="caseMeta">男 / 58 岁 / 农民 / 病案号 SX-2025-0182 · 中级难度</div>
+      </div>
+      <div class="case-info-tags">
+        <span class="case-info-tag">外科·肝胆</span>
+        <span class="case-info-tag warn">高难度疾病</span>
+        <span class="case-info-tag success">⏱ 预计 25 分钟</span>
+        <span class="case-info-tag">9 阶段流程</span>
+      </div>
+    </div>
+
+    <div id="caseStageContainer"></div>
+
+    <!-- 决策点 -->
+    <div class="case-decision" id="caseDecision" style="display:none;">
+      <div class="case-decision-title">⌧ 决策点 · 请选择您的处理思路并简述理由</div>
+      <div class="case-decision-options" id="caseDecisionOptions"></div>
+      <div class="teach-input-label">⌨ 简述您的判断依据</div>
+      <textarea class="case-reasoning" id="caseReasoning" placeholder="请简述您的判断依据与思考过程,结合患者病史、肝功能储备、肿瘤特征、残肝体积等因素综合分析……"></textarea>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn btn-warning" onclick="submitCaseDecision()">⊕ 提交判断</button>
+        <button class="btn btn-outline" onclick="showCaseStandard()">⌧ 查看标准思路</button>
+      </div>
+    </div>
+
+    <!-- 反馈 -->
+    <div class="case-feedback" id="caseFeedback">
+      <div class="case-feedback-title">⌬ 阶段性反馈与点评</div>
+      <div class="case-feedback-text" id="caseFeedbackText"></div>
+    </div>
+
+    <!-- 操作 -->
+    <div class="case-actions">
+      <button class="btn btn-primary" onclick="unlockNextStage()">⊕ 解锁下一阶段</button>
+      <button class="btn btn-outline" onclick="showCaseSummary()">⊙ 查看病例总结</button>
+      <button class="btn btn-ghost" onclick="resetCase()">↻ 重新练习</button>
+    </div>
+
+    <!-- 最终总结 -->
+    <div class="case-final-summary" id="caseFinalSummary">
+      <div class="case-final-summary-title">⊕ 病例完成总结 · 综合表现评价</div>
+      <div class="case-final-summary-text">
+        本病例完整展现了原发性肝癌从术前评估到术后管理的全流程外科决策路径。学员在病史采集与影像解读方面表现出色(94 分),
+        围手术期管理意识较强(86 分);术中关键决策点选择正确;
+        <strong>建议后续加强</strong>肝功能储备综合评估细节(Child-Pugh + ICG-R15 + 残肝体积联合判断)及术后早期并发症识别专项训练,
+        重点关注术后 3-5 天肝功能衰竭征兆与膈下感染早期识别。
+      </div>
+      <div class="case-final-summary-grid">
+        <div class="case-final-stat">
+          <div class="case-final-stat-label">综合得分</div>
+          <div class="case-final-stat-value">86 分</div>
+        </div>
+        <div class="case-final-stat">
+          <div class="case-final-stat-label">决策正确率</div>
+          <div class="case-final-stat-value">83%</div>
+        </div>
+        <div class="case-final-stat">
+          <div class="case-final-stat-label">用时</div>
+          <div class="case-final-stat-value">23′40″</div>
+        </div>
+        <div class="case-final-stat">
+          <div class="case-final-stat-label">能力提升</div>
+          <div class="case-final-stat-value">+ 4.2</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 模块四:诊断推理 ============ -->
+<section class="module" id="reason">
+  <div class="module-header">
+    <div class="module-title-block">
+      <div class="module-title-icon">⌬</div>
+      <div>
+        <div class="module-title">外科诊断推理</div>
+        <div class="module-title-sub">基于结构化推理链 · 训练定位、定性、定型的诊断思维</div>
+      </div>
+    </div>
+    <div class="module-actions">
+      <button class="btn btn-outline" onclick="resetReason()">↻ 重置推理</button>
+      <button class="btn btn-primary" onclick="startReason()">▶ 开始推理</button>
+    </div>
+  </div>
+
+  <div class="reason-layout">
+    <!-- 左侧线索 -->
+    <div class="reason-clues">
+      <div class="panel-title" style="margin-bottom:14px; font-size:14px;">病例线索池</div>
+      <div class="reason-patient-card">
+        <div class="reason-patient-row"><span class="lbl">患者</span><span>女 / 46 岁</span></div>
+        <div class="reason-patient-row"><span class="lbl">职业</span><span>会计师</span></div>
+        <div class="reason-patient-row"><span class="lbl">就诊</span><span>急诊外科</span></div>
+        <div class="reason-patient-chief">主诉:右上腹剧烈疼痛伴寒战、高热、皮肤黄染 8 小时</div>
+      </div>
+
+      <div class="clue-section">
+        <div class="clue-title">⊙ 症状线索 <span class="clue-title-count">5</span></div>
+        <ul class="clue-list">
+          <li class="clue-item key">右上腹持续性剧痛阵发性加剧</li>
+          <li class="clue-item key">寒战、高热(T 39.2℃)</li>
+          <li class="clue-item key">皮肤巩膜进行性黄染</li>
+          <li class="clue-item">伴恶心、呕吐</li>
+          <li class="clue-item">疼痛向右肩背部放射</li>
+        </ul>
+      </div>
+
+      <div class="clue-section">
+        <div class="clue-title">⊙ 体征线索 <span class="clue-title-count">4</span></div>
+        <ul class="clue-list">
+          <li class="clue-item key">右上腹压痛、反跳痛</li>
+          <li class="clue-item key">Murphy 征阳性</li>
+          <li class="clue-item">肝区叩击痛(+)</li>
+          <li class="clue-item">腹肌轻度紧张</li>
+        </ul>
+      </div>
+
+      <div class="clue-section">
+        <div class="clue-title">⊙ 实验室线索 <span class="clue-title-count">5</span></div>
+        <ul class="clue-list">
+          <li class="clue-item key">WBC 18.6×10⁹/L,N% 92%</li>
+          <li class="clue-item key">总胆红素 68 μmol/L(↑)</li>
+          <li class="clue-item key">直接胆红素 42 μmol/L(↑)</li>
+          <li class="clue-item">ALT 168 U/L,AST 142 U/L</li>
+          <li class="clue-item">血淀粉酶 132 U/L</li>
+        </ul>
+      </div>
+
+      <div class="clue-section">
+        <div class="clue-title">⊙ 影像学线索 <span class="clue-title-count">3</span></div>
+        <ul class="clue-list">
+          <li class="clue-item key">B 超:胆囊多发结石</li>
+          <li class="clue-item key">B 超:胆总管下段结石,胆管扩张 12 mm</li>
+          <li class="clue-item">胆囊壁增厚约 5 mm</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 中间推理流 -->
+    <div class="reason-flow">
+      <div class="reason-flow-meta">
+        <div class="panel-title">结构化推理链 · 七步法</div>
+        <div class="reason-step-counter">
+          当前步骤 <strong id="reasonStepNum">1</strong> / 7
+        </div>
+      </div>
+      <div class="reason-timeline" id="reasonTimeline">
+        <div class="reason-step active" data-step="1">
+          <div class="reason-step-header">
+            <div class="reason-step-title">第一步 · 症状归纳</div>
+            <span class="reason-step-tag">信息整合</span>
+          </div>
+          <div class="reason-step-desc">梳理主要症状群,提取核心症状组合(如腹痛性质、发热模式、伴随症状),识别症状学综合征。</div>
+          <textarea class="reason-step-input" placeholder="请归纳本例核心症状组合,关注典型综合征……"></textarea>
+          <div class="reason-step-ref">⌧ <strong>参考:</strong>右上腹剧痛 + 寒战高热 + 黄疸 → 经典 <em>Charcot 三联征</em>,高度提示急性化脓性胆管炎。</div>
+        </div>
+        <div class="reason-step" data-step="2">
+          <div class="reason-step-header">
+            <div class="reason-step-title">第二步 · 关键信息提取</div>
+            <span class="reason-step-tag">证据筛选</span>
+          </div>
+          <div class="reason-step-desc">识别具有定位/定性意义的阳性发现,标注决定诊断方向的关键证据。</div>
+          <textarea class="reason-step-input" placeholder="请提取本例关键阳性信息……"></textarea>
+          <div class="reason-step-ref">⌧ <strong>参考:</strong>Murphy 征(+)、胆总管扩张 12mm、胆总管结石、白细胞显著升高、胆红素升高(以直接胆红素为主)→ 提示<em>胆道梗阻 + 化脓性炎症</em>。</div>
+        </div>
+        <div class="reason-step" data-step="3">
+          <div class="reason-step-header">
+            <div class="reason-step-title">第三步 · 病变定位</div>
+            <span class="reason-step-tag">解剖定位</span>
+          </div>
+          <div class="reason-step-desc">基于解剖结构、症状与体征定位病灶,明确受累器官与系统层次。</div>
+          <textarea class="reason-step-input" placeholder="请判断病变解剖部位……"></textarea>
+          <div class="reason-step-ref">⌧ <strong>参考:</strong>病变定位于<em>胆道系统(胆囊 + 胆总管)</em>,继发肝脏轻度受累(转氨酶升高反映胆汁淤积性肝损伤)。</div>
+        </div>
+        <div class="reason-step" data-step="4">
+          <div class="reason-step-header">
+            <div class="reason-step-title">第四步 · 病因判断</div>
+            <span class="reason-step-tag">病理生理</span>
+          </div>
+          <div class="reason-step-desc">结合病史与检查推断病变性质(炎症、梗阻、肿瘤、损伤等)及病因机制。</div>
+          <textarea class="reason-step-input" placeholder="请分析病变性质与可能病因……"></textarea>
+          <div class="reason-step-ref">⌧ <strong>参考:</strong>胆总管结石嵌顿 → 胆道梗阻 → 胆汁淤积 + 继发细菌性感染(常为革兰阴性菌)→ 化脓性胆管炎,严重者可进展为 AOSC。</div>
+        </div>
+        <div class="reason-step" data-step="5">
+          <div class="reason-step-header">
+            <div class="reason-step-title">第五步 · 鉴别诊断</div>
+            <span class="reason-step-tag">系统排除</span>
+          </div>
+          <div class="reason-step-desc">列出需要鉴别的疾病,分析支持点与不支持点,逐一排除/保留。</div>
+          <textarea class="reason-step-input" placeholder="请列出鉴别诊断及鉴别要点……"></textarea>
+          <div class="reason-step-ref">⌧ <strong>参考:</strong>急性胆囊炎(无明显黄疸)、急性胰腺炎(淀粉酶 ↑↑↑)、肝脓肿(影像学占位)、消化性溃疡穿孔(气腹征)、右肾绞痛(尿常规异常)、急性病毒性肝炎(肝炎标志物)。</div>
+        </div>
+        <div class="reason-step" data-step="6">
+          <div class="reason-step-header">
+            <div class="reason-step-title">第六步 · 形成最终诊断</div>
+            <span class="reason-step-tag">综合判断</span>
+          </div>
+          <div class="reason-step-desc">综合定位、定性与鉴别,形成具有临床意义的完整诊断,包括主要诊断与并存诊断。</div>
+          <textarea class="reason-step-input" placeholder="请形成最终诊断……"></textarea>
+          <div class="reason-step-ref">⌧ <strong>参考:</strong>① 急性梗阻性化脓性胆管炎(AOSC); ② 胆囊结石伴急性胆囊炎; ③ 胆总管结石。需评估是否合并感染性休克(关注 BP、神志)。</div>
+        </div>
+        <div class="reason-step" data-step="7">
+          <div class="reason-step-header">
+            <div class="reason-step-title">第七步 · 确定处理原则</div>
+            <span class="reason-step-tag">外科决策</span>
+          </div>
+          <div class="reason-step-desc">基于诊断与病情严重程度,制定外科处理方案与围手术期管理要点,体现"病因—决策—执行"的完整思路。</div>
+          <textarea class="reason-step-input" placeholder="请提出处理原则……"></textarea>
+          <div class="reason-step-ref">⌧ <strong>参考:</strong>① 急诊抗休克 + 抗感染(覆盖 G⁻ 菌及厌氧菌); ② 紧急胆道减压(优先 ERCP/EST,无条件时 PTCD 或胆总管切开 T 管引流); ③ 病情稳定后(2-4 周)行 LC 切除胆囊; ④ 严密监测脏器功能,警惕脓毒症与 MODS。</div>
+        </div>
+      </div>
+
+      <div class="reason-action-bar">
+        <button class="btn btn-primary" onclick="nextReasonStep()">下一推理步骤 →</button>
+        <button class="btn btn-success" onclick="submitReason()">⊕ 提交答案</button>
+        <button class="btn btn-warning" onclick="showReasonHint()">💡 查看提示</button>
+        <button class="btn btn-outline" onclick="completeAllReason()">查看完整推理链</button>
+      </div>
+    </div>
+
+    <!-- 右侧鉴别与结果 -->
+    <div class="reason-result">
+      <div class="reason-result-section">
+        <div class="reason-result-title">⌧ 鉴别诊断概率分析</div>
+        <ul class="reason-diff-list">
+          <li class="reason-diff-item" data-prob="extreme"><span>急性梗阻性化脓性胆管炎</span><span class="reason-diff-prob">极高</span></li>
+          <li class="reason-diff-item" data-prob="high"><span>急性胆囊炎</span><span class="reason-diff-prob">高</span></li>
+          <li class="reason-diff-item" data-prob="high"><span>胆总管结石</span><span class="reason-diff-prob">高</span></li>
+          <li class="reason-diff-item" data-prob="mid"><span>急性胰腺炎</span><span class="reason-diff-prob">中</span></li>
+          <li class="reason-diff-item" data-prob="low"><span>肝脓肿</span><span class="reason-diff-prob">低</span></li>
+          <li class="reason-diff-item" data-prob="low"><span>消化性溃疡穿孔</span><span class="reason-diff-prob">低</span></li>
+          <li class="reason-diff-item" data-prob="low"><span>右肾结石伴感染</span><span class="reason-diff-prob">低</span></li>
+        </ul>
+      </div>
+
+      <div class="reason-result-section">
+        <div class="reason-result-title">⌬ 推荐最终诊断</div>
+        <div class="reason-final-diag">
+          急性梗阻性化脓性胆管炎(AOSC)
+          <small>伴胆囊结石、胆总管结石</small>
+        </div>
+      </div>
+
+      <div class="reason-result-section">
+        <div class="reason-result-title">⊙ 诊断推理反馈</div>
+        <div class="reason-feedback-tags">
+          <span class="reason-feedback-tag success">推理方向基本正确</span>
+          <span class="reason-feedback-tag success">Charcot 三联征识别敏锐</span>
+          <span class="reason-feedback-tag warn">关键阳性信息识别尚需细化</span>
+          <span class="reason-feedback-tag warn">鉴别诊断不够完整</span>
+          <span class="reason-feedback-tag">术前评估意识较强</span>
+          <span class="reason-feedback-tag danger">需加强 AOSC 严重度判断</span>
+        </div>
+      </div>
+
+      <div class="reason-result-section">
+        <div class="reason-result-title">⊕ 处理原则要点</div>
+        <ul class="reason-treatment-list">
+          <li><span class="num">1</span><span>立即抗休克、广谱抗感染、纠正水电解质紊乱</span></li>
+          <li><span class="num">2</span><span>急诊胆道减压(首选 ERCP/EST 取石)</span></li>
+          <li><span class="num">3</span><span>必要时急诊胆总管切开 + T 管引流</span></li>
+          <li><span class="num">4</span><span>病情稳定 2-4 周后行 LC 切除胆囊</span></li>
+          <li><span class="num">5</span><span>严密监测脏器功能,警惕脓毒症与 MODS</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 模块五:学情反馈 ============ -->
+<section class="module" id="feedback">
+  <div class="module-header">
+    <div class="module-title-block">
+      <div class="module-title-icon">◴</div>
+      <div>
+        <div class="module-title">学情反馈与能力画像</div>
+        <div class="module-title-sub">多维分析学习状态 · 精准定位短板 · 个性化提升路径</div>
+      </div>
+    </div>
+    <div class="module-actions">
+      <button class="btn btn-outline">⤓ 导出反馈报告</button>
+      <button class="btn btn-outline">📊 趋势对比</button>
+      <button class="btn btn-primary">▶ 开启提升计划</button>
+    </div>
+  </div>
+
+  <!-- 学习总览数据 -->
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-header">
+        <div class="stat-label">已完成模块</div>
+        <div class="stat-icon-mini">⊞</div>
+      </div>
+      <div class="stat-value">4<span class="stat-unit">/6 模块</span></div>
+      <div class="stat-meta">
+        <span class="stat-trend">外科核心模块</span>
+        <span class="stat-secondary">还剩 2 个</span>
+      </div>
+    </div>
+    <div class="stat-card accent">
+      <div class="stat-header">
+        <div class="stat-label">病例完成情况</div>
+        <div class="stat-icon-mini">⊕</div>
+      </div>
+      <div class="stat-value">28<span class="stat-unit">例 / 5 类</span></div>
+      <div class="stat-meta">
+        <span class="stat-trend">↑ 较上月 +12 例</span>
+        <span class="stat-secondary">月度新高</span>
+      </div>
+    </div>
+    <div class="stat-card success">
+      <div class="stat-header">
+        <div class="stat-label">综合达成度</div>
+        <div class="stat-icon-mini">★</div>
+      </div>
+      <div class="stat-value">82.6<span class="stat-unit">%</span></div>
+      <div class="stat-meta">
+        <span class="stat-trend">↑ 较上周 +4.2pp</span>
+        <span class="stat-secondary">优秀水平</span>
+      </div>
+    </div>
+    <div class="stat-card warning">
+      <div class="stat-header">
+        <div class="stat-label">推理决策正确率</div>
+        <div class="stat-icon-mini">⌬</div>
+      </div>
+      <div class="stat-value">76<span class="stat-unit">%</span></div>
+      <div class="stat-meta">
+        <span class="stat-trend warn">目标 ≥ 85%</span>
+        <span class="stat-secondary">需提升</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 能力画像六维 -->
+  <div class="panel" style="margin-bottom:18px;">
+    <div class="panel-header">
+      <div class="panel-title">六维能力画像 <span class="panel-title-extra">· 基于 28 例病例与 65 项推理任务</span></div>
+      <div class="panel-link">能力评级标准 ›</div>
+    </div>
+    <div class="ability-cards">
+      <div class="ability-card">
+        <div class="ability-name">⊕ 临床思维</div>
+        <div class="ability-score-wrap">
+          <svg width="110" height="110">
+            <circle cx="55" cy="55" r="46" stroke="#e3e9f2" stroke-width="9" fill="none"/>
+            <circle cx="55" cy="55" r="46" stroke="#2e7d32" stroke-width="9" fill="none"
+                    stroke-dasharray="289.03" stroke-dashoffset="34.68" stroke-linecap="round"/>
+          </svg>
+          <div class="ability-score-text">88<small>/100</small></div>
+        </div>
+        <div class="ability-tag good">★ 优秀</div>
+        <div class="ability-trend">↑ 较上月 +6 分</div>
+      </div>
+      <div class="ability-card">
+        <div class="ability-name">⊕ 术前评估</div>
+        <div class="ability-score-wrap">
+          <svg width="110" height="110">
+            <circle cx="55" cy="55" r="46" stroke="#e3e9f2" stroke-width="9" fill="none"/>
+            <circle cx="55" cy="55" r="46" stroke="#1565c0" stroke-width="9" fill="none"
+                    stroke-dasharray="289.03" stroke-dashoffset="43.35" stroke-linecap="round"/>
+          </svg>
+          <div class="ability-score-text">85<small>/100</small></div>
+        </div>
+        <div class="ability-tag good">★ 优秀</div>
+        <div class="ability-trend">↑ 较上月 +3 分</div>
+      </div>
+      <div class="ability-card">
+        <div class="ability-name">⊕ 手术决策</div>
+        <div class="ability-score-wrap">
+          <svg width="110" height="110">
+            <circle cx="55" cy="55" r="46" stroke="#e3e9f2" stroke-width="9" fill="none"/>
+            <circle cx="55" cy="55" r="46" stroke="#ef6c00" stroke-width="9" fill="none"
+                    stroke-dasharray="289.03" stroke-dashoffset="83.82" stroke-linecap="round"/>
+          </svg>
+          <div class="ability-score-text">71<small>/100</small></div>
+        </div>
+        <div class="ability-tag mid">▲ 需加强</div>
+        <div class="ability-trend">↑ 较上月 +2 分</div>
+      </div>
+      <div class="ability-card">
+        <div class="ability-name">⊕ 术后管理</div>
+        <div class="ability-score-wrap">
+          <svg width="110" height="110">
+            <circle cx="55" cy="55" r="46" stroke="#e3e9f2" stroke-width="9" fill="none"/>
+            <circle cx="55" cy="55" r="46" stroke="#ef6c00" stroke-width="9" fill="none"
+                    stroke-dasharray="289.03" stroke-dashoffset="69.37" stroke-linecap="round"/>
+          </svg>
+          <div class="ability-score-text">76<small>/100</small></div>
+        </div>
+        <div class="ability-tag mid">▲ 良好</div>
+        <div class="ability-trend">→ 持平</div>
+      </div>
+      <div class="ability-card">
+        <div class="ability-name">⊕ 并发症识别</div>
+        <div class="ability-score-wrap">
+          <svg width="110" height="110">
+            <circle cx="55" cy="55" r="46" stroke="#e3e9f2" stroke-width="9" fill="none"/>
+            <circle cx="55" cy="55" r="46" stroke="#c62828" stroke-width="9" fill="none"
+                    stroke-dasharray="289.03" stroke-dashoffset="92.49" stroke-linecap="round"/>
+          </svg>
+          <div class="ability-score-text">68<small>/100</small></div>
+        </div>
+        <div class="ability-tag weak">⚠ 薄弱</div>
+        <div class="ability-trend">↓ 较上月 -2 分</div>
+      </div>
+      <div class="ability-card">
+        <div class="ability-name">⊕ 基础知识</div>
+        <div class="ability-score-wrap">
+          <svg width="110" height="110">
+            <circle cx="55" cy="55" r="46" stroke="#e3e9f2" stroke-width="9" fill="none"/>
+            <circle cx="55" cy="55" r="46" stroke="#2e7d32" stroke-width="9" fill="none"
+                    stroke-dasharray="289.03" stroke-dashoffset="28.90" stroke-linecap="round"/>
+          </svg>
+          <div class="ability-score-text">90<small>/100</small></div>
+        </div>
+        <div class="ability-tag good">★ 优秀</div>
+        <div class="ability-trend">↑ 较上月 +1 分</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 优势短板 + 提升建议 -->
+  <div class="feedback-grid">
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">薄弱知识点与短板分析</div>
+        <div class="panel-link">智能分析 ›</div>
+      </div>
+      <ul class="weak-list">
+        <li class="weak-item">
+          <div>
+            <div class="weak-item-name">⊗ 急性胰腺炎严重程度分级评估</div>
+            <div class="weak-item-meta">
+              <span>Ranson / APACHE Ⅱ / BISAP 评分应用</span>
+              <span>·</span>
+              <span>正确率 58%</span>
+            </div>
+          </div>
+          <span class="weak-item-action" onclick="goToDisease('pancreatitis')">前往复习 →</span>
+        </li>
+        <li class="weak-item">
+          <div>
+            <div class="weak-item-name">⊗ 肝癌肝功能储备综合评估</div>
+            <div class="weak-item-meta">
+              <span>ICG-R15 与 Child-Pugh 综合判断</span>
+              <span>·</span>
+              <span>不到位</span>
+            </div>
+          </div>
+          <span class="weak-item-action" onclick="goToDisease('liver')">前往复习 →</span>
+        </li>
+        <li class="weak-item">
+          <div>
+            <div class="weak-item-name">⊗ 术后早期出血识别与处理</div>
+            <div class="weak-item-meta">
+              <span>原发性 vs 继发性出血鉴别</span>
+              <span>·</span>
+              <span>正确率 62%</span>
+            </div>
+          </div>
+          <span class="weak-item-action" onclick="switchModule('teach')">专项训练 →</span>
+        </li>
+        <li class="weak-item">
+          <div>
+            <div class="weak-item-name">⊗ 门脉高压急诊出血处理时序</div>
+            <div class="weak-item-meta">
+              <span>三腔二囊管 / 内镜 / TIPS 时机把握</span>
+            </div>
+          </div>
+          <span class="weak-item-action" onclick="switchModule('case')">病例训练 →</span>
+        </li>
+        <li class="weak-item">
+          <div>
+            <div class="weak-item-name">⊗ 急性胆管炎 AOSC 判断</div>
+            <div class="weak-item-meta">
+              <span>Reynolds 五联征识别滞后</span>
+            </div>
+          </div>
+          <span class="weak-item-action" onclick="goToDisease('gallstone')">前往学习 →</span>
+        </li>
+      </ul>
+
+      <div class="panel-header" style="margin-top:24px;">
+        <div class="panel-title">学习进度趋势</div>
+        <div class="panel-link">月度对比 ›</div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label">
+          <span>外科虚拟带教</span>
+          <div class="right"><span class="score-num">75%</span><small style="color:var(--text-3); font-size:11px;">15 / 20 课时</small></div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label">
+          <span>病例模拟训练</span>
+          <div class="right"><span class="score-num">82%</span><small style="color:var(--text-3); font-size:11px;">28 / 34 例</small></div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill success" style="width:82%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label">
+          <span>诊断推理训练</span>
+          <div class="right"><span class="score-num">62%</span><small style="color:var(--text-3); font-size:11px;">18 / 29 例</small></div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill warning" style="width:62%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label">
+          <span>疾病知识库阅读</span>
+          <div class="right"><span class="score-num">91%</span><small style="color:var(--text-3); font-size:11px;">5 个核心疾病</small></div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill success" style="width:91%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label">
+          <span>能力评估测试</span>
+          <div class="right"><span class="score-num">68%</span><small style="color:var(--text-3); font-size:11px;">17 / 25 单元</small></div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill warning" style="width:68%"></div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel" style="margin-bottom:14px;">
+        <div class="panel-header">
+          <div class="panel-title">当前优势</div>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <span class="recommend-tag success">病史采集思路清晰</span>
+          <span class="recommend-tag success">影像学解读到位</span>
+          <span class="recommend-tag success">基础解剖知识扎实</span>
+          <span class="recommend-tag">诊断推理逻辑性强</span>
+          <span class="recommend-tag">阑尾炎鉴别诊断优秀</span>
+          <span class="recommend-tag">胆石症围手术期把握良好</span>
+          <span class="recommend-tag">学习连续性强</span>
+          <span class="recommend-tag">病例完成度高</span>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:14px;">
+        <div class="panel-header">
+          <div class="panel-title">阶段性提升建议</div>
+        </div>
+        <div class="advice-card">
+          <div class="advice-card-title">⊕ 短期目标(本周内)</div>
+          <div class="advice-card-text">完成 3 例急性胰腺炎严重程度分级病例,重点训练 Ranson 与 BISAP 评分系统的临床应用,配合知识库专项复习。</div>
+          <div class="advice-card-target">目标:严重度评估正确率 → 80%</div>
+        </div>
+        <div class="advice-card term-mid">
+          <div class="advice-card-title">⊕ 中期目标(本月内)</div>
+          <div class="advice-card-text">围绕术后并发症识别专题,完成 8 例覆盖出血、感染、瘘管、栓塞等高级别病例,提升早期识别能力。</div>
+          <div class="advice-card-target">目标:并发症识别能力 → 80 分</div>
+        </div>
+        <div class="advice-card term-long">
+          <div class="advice-card-title">⊕ 长期目标(本季度)</div>
+          <div class="advice-card-text">系统强化围手术期决策能力,目标手术决策维度提升至 85 分以上,建立完整的外科临床思维体系,达到中高阶能力水平。</div>
+          <div class="advice-card-target">目标:综合能力指数 → 88+,等级 L5</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">推荐复习内容</div>
+        </div>
+        <div style="font-size:13px; color:var(--text-2); line-height:2.0;">
+          ◆ 原发性肝癌肝功能储备评估专题<br>
+          ◆ 急性胰腺炎严重程度分级体系<br>
+          ◆ 门脉高压症急诊出血处理流程<br>
+          ◆ 外科常见术后并发症识别图谱<br>
+          ◆ 围手术期液体管理与营养支持<br>
+          ◆ AOSC 与 Reynolds 五联征专题
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 模块六:疾病知识库 ============ -->
+<section class="module" id="library">
+  <div class="module-header">
+    <div class="module-title-block">
+      <div class="module-title-icon">⎙</div>
+      <div>
+        <div class="module-title">疾病知识库</div>
+        <div class="module-title-sub">教学导向的高密度结构化知识 · 重点-难点-思维提示三位一体</div>
+      </div>
+    </div>
+    <div class="module-actions">
+      <button class="btn btn-outline">★ 收藏本页</button>
+      <button class="btn btn-outline">🔍 全文检索</button>
+      <button class="btn btn-primary">⤓ 下载教学要点</button>
+    </div>
+  </div>
+
+  <div class="disease-tabs" id="diseaseTabs">
+    <div class="disease-tab active" data-disease="liver">
+      <span class="disease-tab-icon">肝</span>原发性肝癌
+    </div>
+    <div class="disease-tab" data-disease="portal">
+      <span class="disease-tab-icon">门</span>门脉高压症
+    </div>
+    <div class="disease-tab" data-disease="gallstone">
+      <span class="disease-tab-icon">胆</span>胆石症
+    </div>
+    <div class="disease-tab" data-disease="pancreatitis">
+      <span class="disease-tab-icon">胰</span>急性胰腺炎
+    </div>
+    <div class="disease-tab" data-disease="appendicitis">
+      <span class="disease-tab-icon">阑</span>急性阑尾炎
+    </div>
+  </div>
+
+  <div class="disease-detail" id="diseaseDetail"></div>
+</section>
+  </main>
+</div>
+<!-- ============ 页脚 ============ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="disclaimer">
+      <div class="disclaimer-icon">⚠</div>
+      <div><strong>教学使用声明:</strong>本系统仅用于医学教学、临床思维训练与外科学实践能力培养,不可替代真实临床诊疗决策,不可直接作为患者个体化诊疗依据。所有病例数据均为教学模拟,与实际患者无关。</div>
+    </div>
+    <div class="footer-meta">
+      <div class="footer-text">
+        <span>© 2026 临床医学外科学教学辅助智能体</span>
+        <span>·</span>
+        <span>数智化医学教育平台 v3.2</span>
+      </div>
+      <div class="footer-orient">
+        <span>以病例为牵引</span>
+        <span>以临床思维为主线</span>
+        <span>以能力培养为核心</span>
+        <span>以外科实践为重点</span>
+        <span>以过程性反馈为支撑</span>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+/* ============ 全局教学数据 ============ */
+
+// 虚拟带教数据 - 增强版
+const teachData = {
+  liver: {
+    sceneMeta: "肝胆外科病房 · 床旁查房 · 第二教学组",
+    scene: "患者男,58 岁,因「右上腹胀痛 2 月,加重伴消瘦 1 周」入院。HBsAg(+)20 余年,肝硬化病史 5 年。增强 CT 提示肝右叶 6.2 cm 占位,呈典型「快进快出」表现。今日教师带教重点为<strong>原发性肝癌的术前评估流程与肝功能储备综合判断</strong>。请同学们围绕床旁查房思路展开。",
+    questions: [
+      {
+        type: "病史采集",
+        q: "面对该患者,术前评估首先需要重点关注哪些病史与体征?",
+        prompt: "提示:从"高危因素—基础肝病—肿瘤特征—全身状态"四个维度系统思考,体现肝癌高危患者的识别能力。",
+        ref: "<strong>病史重点:</strong>① 慢性肝病史(乙肝/丙肝);② 肝硬化病史与并发症;③ 家族肿瘤史;④ 饮酒史与肝毒性物质暴露(黄曲霉毒素);⑤ 近期体重变化与全身症状。<br><br><strong>体征重点:</strong>① 皮肤黏膜黄染;② 肝掌、蜘蛛痣、男性乳腺发育;③ 腹壁静脉曲张;④ 肝脾肿大、肝区包块;⑤ 腹水征(移动性浊音);⑥ 双下肢水肿。<br><br><strong>本例提示:</strong>HBV + 肝硬化 + 体重下降 + 肝大 → 是肝癌的"高危征象组合"。",
+        warn: "易错点:① <em>仅关注影像学占位</em>而忽略基础肝病评估,导致术前肝功能储备判断不足;② 忽略饮酒史等多重肝损伤因素叠加;③ 未追问家族史影响早期筛查决策。",
+        comment: "学员能够建立"病因—基础肝病—肿瘤"的连贯性认识,体现了较好的外科临床思维起点。建议进一步强化对"高危征象组合"的敏感性,做到"听到病史就形成初步印象"。"
+      },
+      {
+        type: "诊断思路",
+        q: "原发性肝癌的诊断思路应包括哪些关键检查?如何把握检查顺序?",
+        prompt: "提示:遵循"无创—有创"和"筛查—确诊—分期"的递进原则,体现规范化诊断思维。",
+        ref: "<strong>关键诊断检查:</strong><ul><li>① <strong>血清 AFP</strong>:>400 ng/mL 持续 1 月或 >200 ng/mL 持续 2 月,结合影像可确诊;</li><li>② <strong>影像学(核心)</strong>:动态增强 CT/MRI 见「快进快出」典型强化模式 + 病灶 >2 cm 即可临床诊断;B 超用于筛查,DSA 用于鉴别;</li><li>③ <strong>必要时穿刺活检</strong>:不典型病例,需注意种植转移风险;</li><li>④ <strong>全身分期评估</strong>:胸部 CT、骨扫描、必要时 PET-CT 排除远处转移;</li><li>⑤ <strong>肝炎标志物 + HBV-DNA</strong>:评估病毒活动性。</li></ul>",
+        warn: "易错点:① <em>AFP 阴性不能排除肝癌</em>(约 30% AFP 阴性);② 忽略增强 CT/MRI 的"快进快出"特征性表现;③ 未充分评估远处转移情况即贸然手术;④ 影像与 AFP 不符时未及时活检。",
+        comment: "诊断思路较完整,体现了规范化诊断意识。重点强化"典型影像 + AFP"的临床诊断标准,以及对"非典型肝癌"的识别能力。"
+      },
+      {
+        type: "术前评估",
+        q: "如何评估患者的肝功能储备能力?这对手术方案选择有何指导意义?",
+        prompt: "提示:这是肝癌外科的核心环节,需建立"多指标综合评估"的整体观,避免依赖单一指标。",
+        ref: "<strong>肝功能储备评估三大工具(必须综合应用):</strong><br>① <strong>Child-Pugh 分级</strong>:A 级可耐受大范围切除,B 级需谨慎,C 级为手术禁忌;<br>② <strong>ICG-R15(吲哚菁绿 15 分钟潴留率)</strong>:<10% 可行半肝切除,10%-20% 限制性切除,20%-30% 仅小范围切除,>30% 禁忌切除;<br>③ <strong>残肝体积评估</strong>(三维重建):标准残肝体积 ≥40% 正常肝、≥30% 硬化肝;<br><br><strong>对手术决策的指导:</strong>① 决定切除范围(局部 vs 半肝 vs 扩大半肝);② 决定术式(解剖性 vs 非解剖性);③ 是否需要术前门静脉栓塞(PVE)预处理;④ 决定术后保肝强度。",
+        warn: "易错点:① 仅依赖单一指标(如仅看 Child-Pugh)做出大范围切除决策;② 忽视肝硬化对再生能力的影响;③ 未行残肝体积测量即决定手术方式;④ ICG-R15 异常时仍坚持半肝切除。",
+        comment: "肝功能储备判断是肝癌外科的<strong>核心安全底线</strong>。临床决策时务必养成"三指标联合"的思维习惯,这是降低术后肝衰竭风险的关键。"
+      },
+      {
+        type: "手术决策",
+        q: "本例患者(Child A、ICG-R15 = 12%、肿瘤位于右肝单发 5-6 cm、残肝体积 45%)的最佳治疗方案?",
+        prompt: "提示:综合考虑肿瘤学要素与外科解剖要素,体现"精准外科"理念。",
+        ref: "<strong>首选方案:解剖性右半肝切除术</strong>(若肿瘤局限于右半肝)或解剖性肝段切除。<br><br><strong>选择依据:</strong>① 单发结节,边界清晰;② 肝功能储备良好(三指标均达标);③ 解剖性切除可同时切除荷瘤门脉所属肝段,降低微转移残留;④ 残肝体积充足。<br><br><strong>围手术期要点:</strong>① 术前抗病毒治疗 + 营养支持 + 必要时 PVE;② 术中低中心静脉压麻醉、Pringle 法控制出血(常温阻断 ≤60 分钟);③ 规范化解剖性切除;④ 术后强化保肝、营养、抗感染、预防门静脉血栓。",
+        warn: "易错点:① 忽视解剖性切除的肿瘤学意义,简单做局部切除;② 忽略术中肝门阻断时间限制;③ 术后未严密监测肝功能动态变化;④ 未提前规划术后抗病毒治疗。",
+        comment: "治疗方案选择思路清晰,体现了"评估—决策—执行"的完整外科决策链。继续强化"解剖性切除"理念在精准外科中的核心地位。"
+      },
+      {
+        type: "术后管理",
+        q: "肝癌切除术后常见并发症及早期识别要点?",
+        prompt: "提示:并发症识别需要"时间窗 + 临床表现 + 实验室 + 影像学"四维联动思维。",
+        ref: "<strong>常见并发症及识别要点:</strong><ul><li>① <strong>肝功能衰竭</strong>(术后 3-5 天):进行性黄疸、PT 延长、腹水增加、神志改变;</li><li>② <strong>腹腔出血</strong>(24-48 小时高危):腹腔引流出鲜红血液 >100 mL/h、HR ↑、Hb ↓;</li><li>③ <strong>胆漏</strong>(术后 5-7 天):引流液胆红素 >血清 3 倍,引流量增加;</li><li>④ <strong>膈下感染</strong>(术后 5-7 天):发热、白细胞升高、右肩背放射痛、CT 见膈下积液;</li><li>⑤ <strong>门静脉血栓</strong>:腹胀、肝功能急剧恶化、彩超确诊;</li><li>⑥ <strong>胸腔积液</strong>(右侧多见):呼吸困难、影像学确诊。</li></ul><strong>处理要点:</strong>早期识别 + 多学科协作 + 个体化分级处理。",
+        warn: "易错点:① <em>将术后早期一过性肝功能异常误认为肝衰竭征兆</em>而过度干预;② 漏诊隐匿性胆漏(引流液成分变化敏感);③ 忽视低分子肝素预防门静脉血栓的时机(需平衡出血与血栓风险);④ 对术后早期发热缺乏鉴别意识。",
+        comment: "并发症识别需要结合<strong>时间窗、临床表现与实验室检查的综合判断</strong>,这是术后管理能力的核心。建议养成"术后每天早查房三问"习惯:引流性状、肝功能、生命体征。"
+      }
+    ],
+    summary: "本轮带教围绕原发性肝癌的术前评估展开,核心训练目标是建立<strong>"基础肝病评估—肿瘤特征评估—肝功能储备评估—手术方案制定—并发症识别"</strong>的完整外科临床思维链。重点掌握 Child-Pugh、ICG-R15 与残肝体积评估的综合应用,理解解剖性切除的临床意义,具备肝癌术后早期并发症的识别能力。本节强调<strong>"精准外科"</strong>与<strong>"安全外科"</strong>的统一性,体现了现代肝胆外科的核心理念。",
+    takeaway: "肝癌外科决策的"金三角":<strong>肿瘤学评估 + 肝功能储备 + 残肝代偿能力</strong>。三者缺一不可,任何一个维度评估不足都可能酿成不可挽回的术后并发症。"
+  },
+  portal: {
+    sceneMeta: "急诊外科 · 抢救室 · 教学查房",
+    scene: "患者男,52 岁,乙肝肝硬化 10 年,因「呕血、黑便 6 小时」急诊入院。BP 90/60 mmHg,HR 118 bpm,贫血貌,意识清。本次带教围绕<strong>门脉高压症合并食管胃底静脉曲张破裂出血(EVB)的急诊处理流程</strong>展开,要求同学们体现"先救命、后治病"的急诊外科思维。",
+    questions: [
+      {
+        type: "急诊处置",
+        q: "急诊接诊该患者,救治的首要顺序是什么?如何把握"黄金窗口"?",
+        prompt: "提示:体现 ABC 急诊原则与"边抢救、边诊断、边治疗"的现代理念。",
+        ref: "<strong>急诊处理优先级(ABC 原则 + 出血控制):</strong><ul><li>① <strong>气道与呼吸</strong>:防误吸,必要时气管插管(尤其大量呕血时);</li><li>② <strong>循环复苏</strong>:建立两条粗大静脉通道(16G 以上),快速扩容(晶体液 + 胶体液),目标维持 MAP ≥ 65 mmHg;</li><li>③ <strong>留取血标本</strong>:血常规、肝肾功、凝血、电解质、血气、交叉配血(预约红细胞 + 新鲜冰冻血浆);</li><li>④ <strong>药物降门压</strong>:生长抑素(首剂 250 μg 静推 + 250 μg/h 持续);特利加压素(2 mg q4h);</li><li>⑤ <strong>预防肝性脑病</strong>:乳果糖灌肠;</li><li>⑥ <strong>抗感染</strong>:第三代头孢预防自发性细菌性腹膜炎;</li><li>⑦ <strong>急诊胃镜</strong>:24 小时内,明确出血来源并镜下止血。</li></ul><strong>原则:</strong>稳定生命体征 → 控制出血 → 病因治疗。",
+        warn: "易错点:① <em>急于明确诊断而忽视抗休克扩容</em>;② 盲目大量输液致门脉压升高加重出血(目标 Hct 25-30%);③ 忽视预防性抗生素的关键作用;④ 延迟胃镜检查时机。",
+        comment: "把握"先救命后治病"的急诊原则,是外科急诊处理的核心思维。强调"边抢救、边诊断"的多线并行能力。"
+      },
+      {
+        type: "鉴别诊断",
+        q: "如何判断本例出血来源?是否一定是 EVB?",
+        prompt: "提示:肝硬化患者上消化道出血并非全是 EVB,需保持鉴别诊断意识。",
+        ref: "<strong>结合本例分析:</strong>① 慢性肝病基础;② 呕鲜血伴黑便;③ 出血量较大伴休克 → 高度提示 EVB,但不能定式思维。<br><br><strong>系统鉴别:</strong>① 食管胃底静脉曲张破裂出血(EVB,最常见);② 消化性溃疡出血(规律性上腹痛史);③ 急性胃黏膜病变(应激史、NSAIDs 使用);④ Mallory-Weiss 综合征(剧烈呕吐后);⑤ 胃癌(慢性消瘦);⑥ 胆道出血(腹痛 + 黄疸 + 出血三联征)。<br><br><strong>确诊金标准:急诊胃镜</strong>(24 小时内),不仅诊断也可治疗。",
+        warn: "易错点:① 对肝硬化患者上消化道出血<em>默认即为 EVB</em>,忽略合并消化性溃疡可能(肝硬化患者溃疡发生率较高);② 未及时行胃镜确诊;③ 忽视胆道出血等少见病因。",
+        comment: "诊断需结合典型病史与镜下所见,避免单一定式思维。培养"始终保持鉴别意识"的临床习惯。"
+      },
+      {
+        type: "止血技术",
+        q: "三腔二囊管的使用时机与规范操作要点?",
+        prompt: "提示:虽为传统手段,但在内镜失败或转运过程中仍是关键的"救命管道"。",
+        ref: "<strong>适应证:</strong>① 急性大出血,内镜止血失败或暂不具备内镜条件;② 作为内镜治疗或 TIPS 的过渡;③ 转运中出血控制。<br><br><strong>规范操作要点:</strong><ul><li>① 操作前充分评估气道,必要时先气管插管;</li><li>② 经鼻或口插入,确认胃囊位置后<strong>先充胃囊 250 mL</strong>;</li><li>③ 牵引固定(0.5 kg 重物);</li><li>④ <strong>仍出血时再充食管囊 100 mL</strong>(压力 30-40 mmHg);</li><li>⑤ 每 8-12 小时放气 15-30 分钟,防黏膜坏死;</li><li>⑥ 留置不超过 72 小时;</li><li>⑦ 拔管前先放食管囊,观察 24 小时无出血再拔胃囊。</li></ul>",
+        warn: "易错点:① <em>未先充胃囊就充食管囊</em>致黏膜损伤;② 长时间不放气导致食管黏膜坏死;③ 拔管前未充分准备再次出血的应对方案;④ 忽视气道保护致误吸。",
+        comment: "三腔二囊管作为<strong>传统但仍有重要价值</strong>的止血手段,要规范操作、合理时限。强调"先胃囊、再食管囊"的操作顺序与放气节奏。"
+      },
+      {
+        type: "长期管理",
+        q: "出血控制后的进一步治疗策略?如何阶梯化处理?",
+        prompt: "提示:体现"急性—稳定—预防—终末期"的全程管理思维与多学科协作意识。",
+        ref: "<strong>病情稳定后阶梯化治疗:</strong><ul><li>① <strong>急性期后:</strong>非选择性 β 受体阻滞剂(普萘洛尔)或卡维地洛降门压;</li><li>② <strong>一级预防:</strong>NSBB + 内镜下套扎(EVL),目标 HVPG 降低 20% 或 <12 mmHg;</li><li>③ <strong>二级预防:</strong>重复内镜套扎 + 药物联合;</li><li>④ <strong>顽固性出血或反复出血:</strong>TIPS 术(经颈静脉肝内门腔分流术);</li><li>⑤ <strong>外科手术:</strong>断流术(贲门周围血管离断 + 脾切除)、分流术(脾肾分流、远端脾肾分流);</li><li>⑥ <strong>终末期肝病:</strong>肝移植评估(MELD 评分指导)。</li></ul><strong>决策依据:</strong>Child 分级 + MELD 评分 + 出血严重程度 + 肝储备情况。",
+        warn: "易错点:① 出血控制后未给予一级预防;② 反复出血时未及时考虑 TIPS 或手术介入;③ 忽视肝功能 C 级患者的手术风险;④ 终末期患者未及时转介肝移植评估。",
+        comment: "门脉高压症治疗强调<strong>阶梯化、个体化与多学科协作</strong>。建议建立"出血急救—稳定治疗—长期预防—终末期管理"的全程视角。"
+      },
+      {
+        type: "围手术期",
+        q: "门脉高压症患者围手术期管理重点?如何预防肝性脑病?",
+        prompt: "提示:体现"全程监护"理念与对肝功能保护的细致管理。",
+        ref: "<strong>围手术期管理要点:</strong><ul><li>① <strong>术前:</strong>充分评估肝功能(Child-Pugh、MELD 评分);纠正凝血(维生素 K、新鲜冰冻血浆、血小板);控制腹水(利尿、限钠);治疗 HBV;营养支持;</li><li>② <strong>术中:</strong>注意减少出血、保护残余肝功能、控制门脉压;</li><li>③ <strong>术后:</strong>严密监测肝功能、凝血、血氨;预防门静脉血栓(抗凝时机);<strong>预防肝性脑病:</strong>乳果糖通便维持每日 2-3 次软便、利福昔明、低蛋白饮食过渡(40-60 g/d)、避免过度利尿与电解质紊乱、慎用镇静剂;早期识别脑病前驱(性格改变、扑翼样震颤)。</li></ul>",
+        warn: "易错点:① 术前未充分纠正凝血异常即手术;② 术后未常规监测血氨;③ 忽视分流术后肝性脑病的高发风险;④ 利尿过度致低钾、碱中毒诱发肝性脑病;⑤ 镇静剂使用不当掩盖脑病征兆。",
+        comment: "围手术期管理是门脉高压症外科疗效的关键保障,需要建立<strong>"全程监护、细致到位"</strong>的临床思维。肝性脑病的预防贯穿始终,是评价管理质量的重要指标。"
+      }
+    ],
+    summary: "本轮带教聚焦门脉高压症合并急性出血的外科处置,核心目标是建立<strong>"急诊抢救—出血控制—病因治疗—长期管理—肝移植评估"</strong>的完整决策链。重点掌握急诊处理优先级、三腔二囊管规范使用、阶梯化治疗策略,以及围手术期肝功能保护与肝性脑病预防。本节强调<strong>"先救命后治病"</strong>的急诊原则与<strong>"多学科协作"</strong>的现代理念。",
+    takeaway: "EVB 处置三大优先级:<strong>① 稳定生命体征 ② 控制活动出血 ③ 预防再出血</strong>。任何处置都不能跳过抢救复苏,而长期管理决定了患者最终结局。"
+  },
+  gallstone: {
+    sceneMeta: "肝胆外科门诊 · 教学查房",
+    scene: "患者女,45 岁,体型偏胖。「反复右上腹痛 3 年,本次进食油腻后再发 6 小时」就诊。B 超示胆囊多发结石,胆囊壁稍厚。本次带教围绕<strong>胆石症的围手术期决策与"安全胆囊切除"理念</strong>展开,要求体现现代腹腔镜外科的"安全文化"。",
+    questions: [
+      {
+        type: "诊断分类",
+        q: "胆石症的临床分类与典型表现?如何识别危重情况?",
+        prompt: "提示:从"无症状—典型胆绞痛—并发症—AOSC"的临床谱系递进思考。",
+        ref: "<strong>按部位分类:</strong>① 胆囊结石(最常见,约 70%);② 肝外胆管结石;③ 肝内胆管结石。<br><br><strong>典型临床表现:</strong>① <strong>胆绞痛</strong>(右上腹/上腹部痛,向右肩背放射,与油腻饮食相关);② Murphy 征阳性(胆囊炎特征性体征);③ 合并感染时寒战高热;④ <strong>胆总管结石</strong>可表现为 <em>Charcot 三联征</em>(腹痛 + 寒战高热 + 黄疸);⑤ 严重者 <em>Reynolds 五联征</em>(三联征 + 休克 + 神志改变),提示 AOSC,死亡率高。<br><br><strong>本例属于:</strong>典型胆囊结石伴慢性胆囊炎急性发作。",
+        warn: "易错点:① 将胆绞痛误诊为胃病或心绞痛(尤其老年人);② 忽略不典型部位疼痛(如胸背部);③ 漏诊无症状胆石症的潜在风险(瓷化胆囊癌变);④ 未识别 Reynolds 五联征的危重性。",
+        comment: "临床表现的识别是胆石症诊断的第一步,要建立<strong>"症状—体征—检查—危重度评估"</strong>的连贯思维。AOSC 是必须迅速识别的外科急症。"
+      },
+      {
+        type: "手术指征",
+        q: "胆石症的手术适应证与禁忌证?如何处理无症状胆石症?",
+        prompt: "提示:平衡"获益—风险"是外科指征判断的核心,体现个体化决策。",
+        ref: "<strong>胆囊切除适应证:</strong><ul><li>① <strong>有症状</strong>胆囊结石(胆绞痛、消化不良反复发作);</li><li>② 结石直径 >2-3 cm(癌变风险);</li><li>③ 充满型结石或<strong>瓷化胆囊</strong>(癌变风险高);</li><li>④ 合并胆囊息肉 >1 cm;</li><li>⑤ 糖尿病患者胆囊结石(并发症风险高);</li><li>⑥ 胆总管结石;</li><li>⑦ 反复发作的急性胆囊炎。</li></ul><strong>相对禁忌证:</strong>严重心肺功能不全、未控制的凝血障碍、晚期肝硬化失代偿期、急性化脓性胆囊炎超过 72 小时(相对)。<br><br><strong>无症状胆石症处理:</strong>定期随访,出现上述任一指征则建议手术。",
+        warn: "易错点:① <em>对所有胆囊结石一律建议手术</em>(应区分症状与无症状);② 忽视无症状瓷化胆囊及癌变风险评估;③ 对妊娠期患者手术时机把握不当;④ 高龄患者手术指征过严或过宽。",
+        comment: "手术指征的判断体现了外科医生的<strong>决策能力与临床智慧</strong>,需平衡获益与风险,实现个体化决策。"
+      },
+      {
+        type: "术前评估",
+        q: "腹腔镜胆囊切除术(LC)的术前评估要点?如何避免术中意外?",
+prompt: "提示:"困难胆囊"的术前预判能力是降低手术风险的关键。",
+ref: "<strong>术前评估清单:</strong><ul><li>① 心肺功能(LC 需 CO₂ 气腹 → 膈肌上抬、回心血量改变);</li><li>② 肝功能、凝血、血常规、血糖;</li><li>③ <strong>MRCP 评估</strong>胆管解剖及排除胆总管结石(重要);</li><li>④ 既往腹部手术史(粘连风险);</li><li>⑤ 合并症控制(糖尿病、高血压);</li><li>⑥ <strong>困难胆囊识别</strong>:胆囊壁厚 >5 mm、胆囊积液、Mirizzi 综合征迹象、反复发作病史;</li><li>⑦ 急性发作期建议在发病 <strong>72 小时内完成"早期 LC"</strong>以降低中转开腹率;</li><li>⑧ 充分告知患者中转开腹、胆道损伤等风险。</li></ul>",
+warn: "易错点:① <em>忽略术前 MRCP 检查</em>导致术中遗漏胆总管结石;② 未识别"困难胆囊"的解剖标志;③ 未告知患者中转开腹的可能性;④ 急性期 >72 小时仍坚持急诊 LC 而未考虑延期。",
+comment: "术前评估的全面性直接影响手术安全性,是 LC 成功的基础。养成<strong>"术前三问"</strong>习惯:胆道解剖、合并症、困难胆囊评估。"
+},
+{
+type: "术中安全",
+q: "LC 术中胆道损伤如何识别和预防?Calot 三角解剖有何要点?",
+prompt: "提示:这是 LC 最重要的"红线",贯穿术前、术中、术后全过程。",
+ref: "<strong>预防胆道损伤的核心原则:</strong><br>① 严格遵循 <strong>"三管一壶腹"识别原则</strong>(胆囊管、肝总管、胆总管 + Hartmann 袋),确认 Calot 三角内安全视野;<br>② 术中疑似胆漏 / 胆管损伤应立即胆道造影;<br>③ 警惕异常胆道解剖(右副肝管、低位汇合、迷走胆管);<br>④ <strong>Calot 三角解剖关键:</strong>钝性分离为主、避免过度电凝、近胆囊壁解剖、早期识别胆囊动脉。<br><br><strong>损伤处理:</strong>① 早期识别 → 术中即刻修补(端端吻合 + T 管);② 复杂损伤 → 转为开腹胆肠吻合(Roux-en-Y);③ 术后发现 → 必要时再次手术。<br><br><strong>核心理念:预防优于治疗,"看不清不切"、"有疑必中转"。</strong>",
+warn: "易错点:① 未严格执行"三管一壶腹"识别;② 过度电凝损伤胆管血供致迟发性狭窄;③ 术后忽视腹腔引流液性状变化;④ 发现可疑损伤后犹豫不决,延误处理时机。",
+comment: "胆道损伤的预防意识是腹腔镜外科医生的<strong>"红线",需贯穿术前、术中、术后全过程</strong>。树立"安全胆囊切除"文化,不以速度论英雄。"
+},
+{
+type: "术后管理",
+q: "胆石症患者的围手术期管理与术后宣教要点?",
+prompt: "提示:体现"以患者为中心"的整体外科思维,关注患者长期生活质量。",
+ref: "<strong>围手术期管理:</strong><ul><li>① 术前禁食 8 小时、禁饮 2 小时;</li><li>② 围手术期预防性抗生素(高危因素者);</li><li>③ 术后早期下床活动(6 小时后)、半流质饮食过渡;</li><li>④ 监测引流液颜色与量(警惕胆漏);</li><li>⑤ 疼痛管理与 VTE 预防。</li></ul><strong>术后宣教要点:</strong><ul><li>① <strong>饮食</strong>:低脂饮食 3-6 月,逐步过渡;</li><li>② 警惕术后腹泻、消化不良(胆盐代谢改变);</li><li>③ <strong>警示症状</strong>:出现持续腹痛、黄疸、发热及时就诊;</li><li>④ <strong>残余结石</strong>可能性及随访建议(胆总管结石残留概率 1-2%);</li><li>⑤ 胆囊切除后综合征的告知;</li><li>⑥ 切口护理与活动指导。</li></ul>",
+warn: "易错点:① 术后过早进食油腻饮食致腹泻;② 忽视引流管观察致胆漏延误发现;③ 未告知胆囊切除后综合征的可能;④ 缺乏远期随访计划。",
+comment: "围手术期管理体现了<strong>"以患者为中心"</strong>的整体外科思维。好的手术 + 好的管理 + 好的宣教 = 完整的外科医疗服务。"
+}
+],
+summary: "胆石症教学的核心是建立<strong>"分类诊断—手术指征—术前评估—术中安全—术后管理"</strong>的完整临床路径。重点掌握 LC 的术前评估、术中关键解剖识别(Calot 三角)、胆道损伤的预防与处理,以及术后随访宣教。强调<strong>"安全胆囊切除"</strong>的现代外科文化理念,以及"看不清不切、有疑必中转"的决策智慧。",
+takeaway: "LC 的"安全三要素":<strong>正确的解剖(Calot 三角) + 谨慎的技术(钝性分离) + 明智的决策(必要时中转)</strong>。胆道损伤是终身之痛,预防永远优于补救。"
+},
+pancreatitis: {
+sceneMeta: "急诊外科 · ICU 联合查房",
+scene: "患者男,44 岁,饮酒后突发「上腹剧烈疼痛 12 小时,向腰背部放射」入院。血淀粉酶 1280 U/L,BP 100/65 mmHg,HR 110 bpm,RR 24 次/分。本次带教重点为<strong>急性胰腺炎严重程度评估、目标导向液体复苏与现代 Step-up Approach 外科理念</strong>。",
+questions: [
+{
+type: "诊断思路",
+q: "急性胰腺炎的诊断依据?如何避免误诊漏诊?",
+prompt: "提示:诊断标准明确但需避免惯性思维,腹痛+酶升高不等于胰腺炎。",
+ref: "<strong>诊断需满足以下三条中的两条:</strong><ul><li>① 与急性胰腺炎相符的腹痛(突发上腹剧痛、持续不缓解、向腰背部放射);</li><li>② 血清<strong>淀粉酶或脂肪酶升高超过正常上限 3 倍</strong>(脂肪酶特异性更高、持续时间更长);</li><li>③ 影像学(增强 CT/MRI/B 超)发现急性胰腺炎特征性改变。</li></ul><strong>本例:</strong>腹痛典型 + 淀粉酶显著升高 → 诊断成立,下一步重点是严重程度评估与病因判断。<br><br><strong>病因评估:</strong>结合本例饮酒史,为酒精性胰腺炎可能;需同时排除胆源性(我国最常见)。",
+warn: "易错点:① 仅凭淀粉酶轻度升高即诊断胰腺炎(需 >3 倍);② 忽略其他疾病(消化道穿孔、肠系膜缺血、急性心梗)的鉴别;③ 早期未行增强 CT 评估病情严重度;④ 忽视病因学评估导致治疗不到位。",
+comment: "诊断的严谨性是急性胰腺炎规范化诊疗的起点。<strong>"诊断 + 病因 + 严重度"三位一体</strong>,缺一不可。"
+},
+{
+type: "严重度评估",
+q: "急性胰腺炎严重程度如何分级?多种评分系统如何综合应用?",
+prompt: "提示:不同评分系统各有侧重,体现"动态评估、综合判断"的现代理念。",
+ref: "<strong>2012 修订版亚特兰大分类:</strong><ul><li>① <strong>轻症(MAP)</strong>:无器官衰竭无并发症;</li><li>② <strong>中重症(MSAP)</strong>:一过性器官衰竭(<48 小时)或局部并发症;</li><li>③ <strong>重症(SAP)</strong>:持续器官衰竭(>48 小时)。</li></ul><strong>常用评分系统:</strong><ul><li>① <strong>Ranson 评分</strong>:入院时 5 项 + 入院 48 小时后 6 项,≥3 分为重症(需等待 48 小时完整评估);</li><li>② <strong>APACHE Ⅱ</strong>:≥8 分(适用于 ICU,动态评估);</li><li>③ <strong>BISAP</strong>:≥3 分(简便快速,5 项指标 24 小时内可得);</li><li>④ <strong>CTSI 评分</strong>(Balthazar):≥4 分,基于影像学;</li><li>⑤ <strong>Marshall 评分</strong>:评估器官衰竭。</li></ul><strong>综合判断原则:</strong>动态评估、多评分系统联合、重视 SIRS 与器官衰竭早期征兆。",
+warn: "易错点:① <em>仅依靠单一评分系统判断</em>;② 忽略动态评估的重要性(48 小时再评估);③ 未及时识别 SIRS 与器官衰竭的早期征兆;④ Ranson 评分需等待 48 小时,不应延误早期干预。",
+comment: "严重程度分级<strong>直接决定治疗强度和处理场所</strong>,是外科决策的关键依据。重症患者必须尽早转入 ICU 综合救治。"
+},
+{
+type: "早期治疗",
+q: "急性胰腺炎的早期治疗原则?如何实施"目标导向"液体复苏?",
+prompt: "提示:现代 AP 治疗已从"经验性"转向"目标导向",体现循证医学理念。",
+ref: "<strong>早期治疗要点(前 72 小时最关键):</strong><ul><li>① <strong>液体复苏(核心)</strong>:目标导向,前 24 小时 2500-4000 mL(平衡液为主);评估指标:尿量 ≥0.5 mL/kg/h、HCT 下降趋势、BUN 稳定、MAP ≥65 mmHg;</li><li>② <strong>镇痛</strong>:避免吗啡(致 Oddi 括约肌痉挛),首选哌替啶或其他阿片类;</li><li>③ <strong>抑制胰酶分泌</strong>:生长抑素及类似物(奥曲肽);</li><li>④ <strong>营养支持</strong>:早期肠内营养(48-72 小时内,鼻空肠管)优于肠外;</li><li>⑤ <strong>处理病因</strong>:胆源性者 24-72 小时内 ERCP;</li><li>⑥ <strong>抗生素</strong>:仅用于感染性坏死,不预防性使用;</li><li>⑦ 严密监测器官功能(呼吸、循环、肾、凝血)。</li></ul><strong>原则:</strong>支持治疗为主,避免过度干预。",
+warn: "易错点:① <em>液体复苏过度</em>致腹腔间隔综合征(ACS);② 早期使用预防性抗生素(无明确指征);③ 过度依赖肠外营养延迟肠内营养;④ 使用吗啡加重病情;⑤ 胆源性 AP 延误 ERCP 时机。",
+comment: "急性胰腺炎的早期处理强调<strong>"目标导向、个体化、动态调整"</strong>的现代理念。过度治疗与治疗不足同样有害,关键在精准把握度。"
+},
+{
+type: "外科干预",
+q: "急性胰腺炎的手术适应证与时机?Step-up Approach 是什么?",
+prompt: "提示:现代 AP 外科已从"早期清创"转向"延迟微创递升"的革命性理念。",
+ref: "<strong>手术适应证(遵循 Step-up Approach 创伤递升原则):</strong><ul><li>① <strong>胆源性胰腺炎合并胆道梗阻</strong> → 早期 ERCP(24-72 小时);</li><li>② <strong>感染性胰腺坏死</strong>(经影像或穿刺证实):首选延迟干预(>4 周),按 PCD → 微创清创 → 开放手术的递升顺序;</li><li>③ <strong>腹腔间隔综合征</strong>(膀胱压 >20 mmHg + 器官功能障碍)→ 减压;</li><li>④ <strong>假性囊肿</strong> >6 cm、持续 >6 周或并发症时引流(内引流优先);</li><li>⑤ <strong>胆总管结石残留</strong>。</li></ul><strong>Step-up Approach 创伤递升原则:</strong>先经皮穿刺引流(PCD,A 步) → 微创清创(视频辅助腹膜后清创 VARD 或内镜下清创,B 步) → 开放手术清创(C 步,仅 30% 需要)。<br><br><strong>核心理念:延迟手术、避免早期开腹清创。</strong>",
+warn: "易错点:① <em>早期对无菌性坏死即行外科清创</em>(死亡率显著升高);② 延误胆源性胰腺炎的 ERCP 时机;③ 未遵循创伤递升原则直接开腹;④ 对假性囊肿过于积极手术。",
+comment: "现代急性胰腺炎外科治疗已从<strong>"早期开腹清创"转变为"延迟、微创、个体化"</strong>的策略。Step-up Approach 是近十年最重要的理念变革,必须牢固掌握。"
+},
+{
+type: "并发症",
+q: "急性胰腺炎的常见并发症及处理?如何预防 MODS?",
+prompt: "提示:体现"系统性、阶段性、协作性"的现代重症外科思维。",
+ref: "<strong>局部并发症(按 2012 分类):</strong><ul><li>① 急性胰周液体积聚(APFC,<4 周);</li><li>② 急性坏死性积聚(ANC,<4 周);</li><li>③ 胰腺假性囊肿(>4 周,有囊壁);</li><li>④ 包裹性坏死(WON,>4 周);</li><li>⑤ <strong>感染性坏死</strong>(死亡率 20-30%,需 Step-up 干预)。</li></ul><strong>全身并发症:</strong><ul><li>① ARDS;② AKI;③ DIC;④ <strong>腹腔间隔综合征</strong>;⑤ MODS/MOF;⑥ 脓毒症;⑦ 上消化道出血;⑧ 胰瘘。</li></ul><strong>MODS 预防策略:</strong>目标导向液体复苏 + 早期 ICU 监护 + 多学科协作(MDT)+ 适时外科干预 + 早期肠内营养 + 避免院内感染。",
+warn: "易错点:① 将假性囊肿与脓肿混淆;② 忽视腹腔间隔综合征的早期识别(膀胱压监测);③ 对感染性坏死延迟干预;④ 过度使用肠外营养诱发感染。",
+comment: "急性胰腺炎并发症的识别与处理体现了<strong>"系统性、阶段性、协作性"</strong>的现代外科思维。SAP 是典型的 MDT 协作疾病。"
+}
+],
+summary: "急性胰腺炎教学的核心是掌握<strong>"诊断+病因—严重程度分级—液体复苏—病因处理—并发症识别—手术决策"</strong>的全流程管理。重点理解亚特兰大分类、多种评分系统的综合应用、<strong>Step-up Approach 的现代外科理念</strong>,以及肠内营养、目标导向治疗等前沿管理策略。本节强调现代 AP 治疗的"少即是多"原则:避免过度治疗与早期手术。",
+takeaway: "AP 现代治疗三大革新:<strong>① 目标导向液体复苏(而非"经验性大量补液")② 早期肠内营养(而非"禁食等待")③ Step-up 递升干预(而非"早期开腹清创")</strong>。理念革新往往比技术革新更重要。"
+},
+appendicitis: {
+sceneMeta: "普外科急诊 · 教学带教",
+scene: "患者男,22 岁,「转移性右下腹痛 18 小时,伴恶心、低热」就诊。T 38.0℃,右下腹麦氏点压痛、反跳痛(+),WBC 14.5×10⁹/L。本次带教重点是<strong>急性阑尾炎的典型识别、系统鉴别诊断、手术时机把握与微创外科应用</strong>。",
+questions: [
+{
+type: "典型表现",
+q: "急性阑尾炎的典型临床表现是什么?为何"转移性右下腹痛"具有诊断意义?",
+prompt: "提示:转移性腹痛反映了阑尾炎病理演变过程,是经典教学要点。",
+ref: "<strong>典型临床表现"四联征":</strong><ul><li>① <strong>转移性右下腹痛</strong>:初起脐周/上腹(内脏痛,胚胎学起源),数小时后转移至右下腹固定(躯体痛,壁层腹膜受累);</li><li>② 胃肠道症状(恶心、呕吐、食欲下降);</li><li>③ 全身症状(低热、寒战);</li><li>④ 典型体征:<strong>McBurney 点压痛、反跳痛、肌紧张</strong>;Rovsing 征、闭孔肌征、腰大肌征阳性。</li></ul><strong>转移性腹痛的病理意义:</strong>① 早期:阑尾管腔梗阻 → 内脏神经传入(T10 支配),定位模糊在脐周;② 进展:炎症累及壁层腹膜 → 躯体神经传入,定位准确在右下腹。这一演变过程正是阑尾炎典型性的基础。<br><br><strong>本例表现典型</strong>,符合急性阑尾炎诊断。",
+warn: "易错点:① 不典型表现(老年人、儿童、孕妇)易漏诊;② 异位阑尾(盆位、盲肠后位)定位困难;③ 早期单凭实验室排除阑尾炎不可靠;④ 忽视转移性腹痛的诊断价值。",
+comment: "急性阑尾炎诊断重在<strong>临床表现的细致分析</strong>,要熟悉典型与不典型的差异。转移性腹痛的病理机制是经典教学素材。"
+},
+{
+type: "鉴别诊断",
+q: "急性阑尾炎需要与哪些疾病鉴别?如何系统化思考?",
+prompt: "提示:右下腹痛鉴别是经典的系统性临床思维训练,切忌"一见右下腹痛就是阑尾炎"。",
+ref: "<strong>系统化鉴别诊断("六系统法"):</strong><ul><li>① <strong>妇科系统(育龄女性必查)</strong>:卵巢囊肿蒂扭转、异位妊娠破裂、急性盆腔炎、黄体破裂、卵泡破裂;</li><li>② <strong>泌尿系统</strong>:右输尿管结石(肾绞痛)、急性肾盂肾炎;</li><li>③ <strong>消化系统</strong>:急性肠胃炎、Meckel 憩室炎、Crohn 病、肠系膜淋巴结炎(儿童)、肠梗阻、急性胰腺炎、急性胆囊炎、右半结肠憩室炎、右半结肠癌穿孔(老年);</li><li>④ <strong>呼吸系统</strong>:右下肺炎放射痛(儿童);</li><li>⑤ <strong>代谢性</strong>:糖尿病酮症酸中毒、过敏性紫癜(儿童);</li><li>⑥ <strong>心血管</strong>:下壁心肌梗死(老年,不典型表现)。</li></ul><strong>鉴别要点:</strong>疼痛性质、伴随症状、专科查体(妇科、肛诊)、实验室(尿、妇科)、影像学(B 超 / CT)。",
+warn: "易错点:① 育龄女性未做妇科评估(异位妊娠致命);② 忽略右肾绞痛与阑尾炎鉴别;③ 老年患者未排除右半结肠癌穿孔;④ 儿童未考虑肠系膜淋巴结炎;⑤ 糖尿病患者遗漏 DKA 鉴别。",
+comment: "鉴别诊断的全面性是<strong>避免误诊误治的关键</strong>,体现系统性临床思维。建议建立"不同年龄 × 不同性别"的鉴别清单习惯。"
+},
+{
+type: "手术时机",
+q: "急性阑尾炎的手术时机如何把握?Alvarado 评分有何价值?",
+prompt: "提示:手术时机是平衡"观察等待"与"及时手术"的关键决策点。",
+ref: "<strong>手术时机决策:</strong><ul><li>① <strong>单纯性急性阑尾炎</strong>:确诊后尽早手术(24 小时内);</li><li>② <strong>化脓性 / 坏疽性阑尾炎</strong>:急诊手术(穿孔风险);</li><li>③ <strong>阑尾穿孔合并弥漫性腹膜炎</strong>:急诊手术 + 腹腔冲洗 + 引流;</li><li>④ <strong>阑尾周围脓肿(包块形成)</strong>:首选保守治疗(抗生素 ± 经皮穿刺引流),3 月后择期手术("冷静期"手术);</li><li>⑤ <strong>诊断不明确</strong>:密切观察(4-6 小时)+ 必要时诊断性腹腔镜。</li></ul><strong>术式选择:</strong>① <strong>腹腔镜阑尾切除术(LA)</strong>为首选,尤其肥胖、女性、诊断不明者;② 复杂情况(严重粘连、巨大脓肿)选开腹手术;③ 单孔 LA、免 Troca 等新技术。<br><br><strong>Alvarado 评分(MANTRELS):</strong>≥7 分高度提示手术,4-6 分观察或进一步检查,≤3 分通常可排除。",
+warn: "易错点:① 阑尾周围脓肿盲目手术致穿孔扩散;② 妊娠期阑尾炎犹豫不决延误时机;③ 老年患者因合并症延迟手术致穿孔;④ 未利用 Alvarado 评分辅助决策。",
+comment: "手术时机的判断是急性阑尾炎处理的<strong>核心决策</strong>,需平衡观察与手术的获益。"早期手术 vs 冷静期手术"的选择体现了外科医生的判断力。"
+},
+{
+type: "特殊人群",
+q: "妊娠期阑尾炎处理有何特殊性?儿童和老年人呢?",
+prompt: "提示:特殊人群的临床特点直接影响诊治策略,体现个体化诊疗。",
+ref: "<strong>妊娠期阑尾炎特殊性:</strong><ul><li>① 妊娠期阑尾位置随子宫上移(中晚孕位于右腰部甚至右季肋);</li><li>② 早孕期表现可被恶心呕吐掩盖;</li><li>③ 中晚孕期腹肌紧张征不明显(子宫阻隔);</li><li>④ 影像学首选 B 超(避免 CT 辐射);</li><li>⑤ MRI 对妊娠期诊断价值高(>18 周孕妇);</li><li>⑥ <strong>处理原则:</strong>一旦确诊立即手术(避免穿孔致流产/早产,胎儿死亡率与母亲死亡率均显著上升);</li><li>⑦ 麻醉与术式选择需综合评估孕周与胎儿安全;围手术期保胎治疗;</li><li>⑧ 多学科协作(产科、麻醉)。</li></ul><strong>儿童特点:</strong>① 症状不典型(腹泻、发热为主);② 网膜短,包裹差,易早穿孔;③ 需与肠系膜淋巴结炎鉴别;④ 腹痛描述能力差,需细致查体。<br><br><strong>老年人特点:</strong>① 症状轻、病程长;② 易误诊(合并症多);③ 穿孔率高(反应差);④ 需警惕合并肿瘤(右半结肠癌)。",
+warn: "易错点:① 担心手术影响胎儿而延误时机(延误的危害远大于手术);② 忽视妊娠期阑尾位置改变;③ 儿童依赖主诉而忽略查体;④ 老年人未排除结肠肿瘤;⑤ 术中切口选择不当增加创伤。",
+comment: "妊娠期阑尾炎处理强调<strong>"母婴安全并重"</strong>的临床思维,需要外科与产科协作。特殊人群的个体化策略是高级临床思维的体现。"
+},
+{
+type: "并发症",
+q: "急性阑尾炎术后常见并发症与预防?如何做好术后管理?",
+prompt: "提示:并发症预防贯穿术前、术中、术后全过程,体现精细化外科管理。",
+ref: "<strong>常见并发症及发生率:</strong><ul><li>① <strong>切口感染</strong>(单纯性 5%,化脓/穿孔 10-20%):最常见;</li><li>② <strong>腹腔脓肿</strong>(盆腔、膈下、肠间):穿孔病例高发;</li><li>③ <strong>粘连性肠梗阻</strong>(远期 1-3%);</li><li>④ <strong>阑尾残株炎</strong>(残端 >0.5 cm 时);</li><li>⑤ 切口出血、术后出血;</li><li>⑥ 粪瘘(罕见,结扎不牢);</li><li>⑦ 门静脉炎(严重,罕见);</li><li>⑧ 不孕症(女性盆腔炎症远期影响)。</li></ul><strong>预防要点:</strong><ul><li>① 术中严格无菌操作;</li><li>② 规范暴露、双道结扎、残端处理;</li><li>③ <strong>化脓/穿孔者腹腔充分冲洗 + 引流</strong>;</li><li>④ 围手术期合理使用抗生素;</li><li>⑤ 术后早期下床活动(6 小时后);</li><li>⑥ 严密观察腹腔引流液变化;</li><li>⑦ 切口感染高危者二期缝合。</li></ul>",
+warn: "易错点:① 切口缝合时未充分清洁污染层;② 复杂阑尾炎未常规放置引流;③ 术后过早拔管漏诊深部感染;④ 忽视远期粘连风险的告知。",
+comment: "并发症预防<strong>贯穿术前、术中、术后全过程</strong>,体现精细化外科管理理念。好的手术 + 好的管理 = 好的结局。"
+}
+],
+summary: "急性阑尾炎教学的重点是建立<strong>"典型与不典型表现识别—系统鉴别诊断—手术时机把握—术式选择—并发症预防"</strong>的完整诊疗思维。强调腹腔镜技术的临床应用、特殊人群(妊娠、老年、儿童)的个体化处理,以及术后管理的精细化。本节作为<strong>外科鉴别诊断的经典教学</strong>,培养学员"不以疾病论疾病"的系统性思维。",
+takeaway: "急性阑尾炎诊治三大核心思维:<strong>① 转移性腹痛的病理生理理解 ② 系统性鉴别诊断(六系统法) ③ 手术时机的个体化决策</strong>。看似常见病,实则是临床思维的试金石。"
+}
+};
+// 病例数据(原发性肝癌详细流程)
+const caseStages = [
+{
+label: "主诉与现病史",
+content: <strong>主诉:</strong>右上腹胀痛 2 月,加重伴消瘦 1 周。<br><br>               <strong>现病史:</strong>患者 2 月前无明显诱因出现右上腹持续性胀痛,无明显放射,与饮食无明显相关,自行口服"胃药"未缓解。近 1 周症状加重,伴乏力、食欲下降,<strong>体重减轻约 5 kg</strong>,无发热、黄疸、呕血、黑便。<br><br>               <strong>既往史:</strong>HBsAg(+)23 年,未规范抗病毒治疗;肝硬化病史 5 年,曾有轻度腹水史。否认糖尿病、高血压。否认输血史、手术史。<br><br>               <strong>个人史:</strong>农民,<strong>饮酒史 30 年,平均 250 g 白酒/日</strong>。吸烟 20 支/日 × 30 年。否认特殊药物与毒物接触。<br><br>               <strong>家族史:</strong><strong>父亲死于肝癌</strong>(一级亲属肿瘤史)。两位兄长均 HBsAg 阳性。
+},
+{
+label: "体格检查",
+content: <strong>一般情况:</strong>T 36.8℃  P 86 次/分  R 18 次/分  BP 128/76 mmHg,身高 172 cm,体重 58 kg(BMI 19.6)。<br>               神志清楚,慢性病容,消瘦貌,皮肤黏膜无明显黄染,浅表淋巴结未触及肿大。<br><br>               <strong>专科查体(外科重点):</strong>               <ul>                 <li>腹平软,腹壁可见<strong>少量蜘蛛痣</strong>(胸前 2 枚);</li>                 <li>右上腹稍饱满,可触及一约 <strong>6×5 cm 质硬包块</strong>,边界不清,轻压痛;</li>                 <li><strong>肝肋下 4 cm,质硬,表面不平</strong>,无明显触痛;</li>                 <li>脾肋下 3 cm,质中;</li>                 <li>移动性浊音(±);</li>                 <li>双下肢轻度凹陷性水肿;</li>                 <li>肠鸣音正常 4 次/分。</li>               </ul>               <strong>临床印象:</strong>肝硬化体征明确 + 肝区包块 + 消瘦 + 高危病史 → 高度提示肝占位病变。
+},
+{
+label: "辅助检查",
+content: <strong>实验室检查(关键指标):</strong>               <div class="case-data-grid">                 <div class="case-data-cell low"><div class="lbl">血红蛋白 Hb</div><div class="val">108 g/L</div></div>                 <div class="case-data-cell low"><div class="lbl">血小板 PLT</div><div class="val">86×10⁹/L</div></div>                 <div class="case-data-cell abnormal"><div class="lbl">ALT</div><div class="val">68 U/L</div></div>                 <div class="case-data-cell abnormal"><div class="lbl">AST</div><div class="val">92 U/L</div></div>                 <div class="case-data-cell low"><div class="lbl">白蛋白 ALB</div><div class="val">32 g/L</div></div>                 <div class="case-data-cell"><div class="lbl">总胆红素</div><div class="val">22 μmol/L</div></div>                 <div class="case-data-cell abnormal"><div class="lbl">PT / INR</div><div class="val">15.2s / 1.32</div></div>                 <div class="case-data-cell abnormal"><div class="lbl">HBV-DNA</div><div class="val">5.6×10⁵ IU/mL</div></div>                 <div class="case-data-cell abnormal"><div class="lbl">AFP</div><div class="val">386 ng/mL ↑↑</div></div>                 <div class="case-data-cell"><div class="lbl">ICG-R15</div><div class="val">12.8%</div></div>               </div>               <br><strong>影像学检查:</strong>               <ul>                 <li><strong>腹部增强 CT(关键):</strong>肝右叶可见一约 <strong>6.2×5.5 cm 占位</strong>,动脉期明显强化,门脉期及延迟期对比剂快速廓清,呈典型<strong>"快进快出"表现</strong>;门静脉主干及分支未见癌栓;肝硬化征象明显。</li>                 <li><strong>MRI 多期增强:</strong>符合典型 HCC 影像学特征。</li>                 <li><strong>胸部 CT:</strong>未见转移灶。</li>                 <li><strong>骨扫描:</strong>未见异常浓聚。</li>                 <li><strong>三维重建:</strong>预计右半肝切除后残肝体积占标准肝体积约 45%。</li>               </ul>
+},
+{
+label: "初步判断",
+content: <strong>初步诊断:</strong>               <ul>                 <li>① <strong>原发性肝癌</strong>(右肝单发病灶,约 6.2 cm)</li>                 <li>② 乙肝肝硬化(代偿期,Child-Pugh A 级,5 分)</li>                 <li>③ 慢性 HBV 感染(HBV-DNA 高复制状态)</li>                 <li>④ 轻度贫血 + 血小板减少(脾功能亢进相关)</li>                 <li>⑤ 低白蛋白血症</li>               </ul>               <strong>诊断依据:</strong>               <ul>                 <li>① HBV 23 年 + 肝硬化基础 + 家族肝癌史(高危人群三要素);</li>                 <li>② AFP 显著升高(386 ng/mL,>200 ng/mL 持续 >2 月的临界);</li>                 <li>③ <strong>影像学典型"快进快出"表现</strong>(增强 CT/MRI 均证实);</li>                 <li>④ 临床表现支持(消瘦、肝肿大、肝区包块、蜘蛛痣)。</li>               </ul>               <strong>分期:</strong>BCLC 分期 A 期(早期单发),CNLC 分期 Ib 期。
+},
+{
+label: "术前决策与多学科评估",
+content: <strong>术前评估总览:</strong>               <ul>                 <li><strong>肝功能储备:</strong>Child-Pugh A 级(5 分),ICG-R15 = 12.8% → <em>可耐受半肝切除</em>;</li>                 <li><strong>残肝体积评估:</strong>三维重建预计残肝体积占标准肝体积约 <strong>45%</strong> → 满足需求(硬化肝需 ≥30%,安全阈值充足);</li>                 <li><strong>心肺功能评估:</strong>心电图、心脏超声(EF 62%)、肺功能基本正常,可耐受手术;</li>                 <li><strong>合并症处理:</strong>HBV 高复制状态,<strong>需术前恩替卡韦抗病毒 1 周以上</strong>,围手术期继续;</li>                 <li><strong>营养状态:</strong>BMI 19.6 + 低蛋白血症 → 轻度营养不良,<strong>术前营养支持 1 周</strong>(肠内营养为主);</li>                 <li><strong>凝血功能:</strong>INR 1.32,血小板 86×10⁹/L → 术前补充新鲜冰冻血浆或 VitK;</li>                 <li><strong>MDT 会诊:</strong>外科、肝病科、影像科、麻醉科、营养科多学科讨论。</li>               </ul>               <strong>多学科会诊意见:</strong>建议行<strong>解剖性右半肝切除术</strong>,术前抗病毒治疗 1 周 + 营养支持 + 凝血纠正 + 告知风险后择期手术。术前 PVE 评估不必要(残肝充足)。
+},
+{
+label: "手术方案与术中要点",
+content: <strong>手术方式:解剖性右半肝切除术(+ 术中胆囊切除)</strong><br><br>               <strong>手术要点:</strong>               <ul>                 <li>① 右上腹反"L"形切口或腹腔镜辅助切口(视中心经验);</li>                 <li>② <strong>低中心静脉压麻醉</strong>(CVP 2-5 cmH₂O),减少术中出血;</li>                 <li>③ 解剖第一肝门,结扎切断右肝动脉、右门静脉,观察缺血线;</li>                 <li>④ 解剖第二肝门,处理右肝静脉;</li>                 <li>⑤ <strong>Pringle 法</strong>控制出血(阻断 15 分钟,开放 5 分钟,常温阻断总时间 ≤60 分钟);</li>                 <li>⑥ 沿缺血分界线断肝(超声刀 + CUSA),逐一处理管道;</li>                 <li>⑦ 创面彻底止血,胆漏试验阴性;</li>                 <li>⑧ 放置肝下、膈下引流各一根;</li>                 <li>⑨ 术中探查:无腹腔种植转移。</li>               </ul>               <strong>术中情况:</strong>手术顺利,出血约 400 mL,未输血。标本剖视见肿瘤 6.5×5.8×5.0 cm,包膜完整,切缘 >1 cm。
+},
+{
+label: "围手术期管理",
+content: <strong>术后 ICU 24 小时 → 普通病房监护:</strong>               <ul>                 <li><strong>① 生命体征监护:</strong>心电、血氧、血压持续监测;</li>                 <li><strong>② 肝功能监测:</strong>术后每日 ALT/AST/TBil/INR,重点关注 <strong>PT 与血清胆红素动态</strong>;</li>                 <li><strong>③ 保肝治疗:</strong>还原型谷胱甘肽、多烯磷脂酰胆碱;</li>                 <li><strong>④ 抗感染:</strong>预防性使用第二代头孢 + 甲硝唑 48 小时;</li>                 <li><strong>⑤ 营养支持:</strong>术后 24 小时内启动肠内营养(少量温米汤过渡到肠内营养液);</li>                 <li><strong>⑥ 凝血管理:</strong>根据 PT/INR 动态补充新鲜冰冻血浆;</li>                 <li><strong>⑦ VTE 预防:</strong>术后 24 小时起低分子肝素(平衡出血与血栓风险);</li>                 <li><strong>⑧ 引流管管理:</strong>每日记录量与性状,警惕出血与胆漏;</li>                 <li><strong>⑨ 抗病毒治疗:</strong>继续恩替卡韦,预防 HBV 再激活;</li>                 <li><strong>⑩ 早期下床:</strong>术后 24-48 小时鼓励活动,预防肺部并发症与 VTE。</li>               </ul>
+},
+{
+label: "术后并发症监测",
+content: <strong>术后早期并发症的"时间窗识别"要点:</strong>               <ul>                 <li><strong>① 腹腔出血(24-48 小时高危):</strong>引流出鲜红血液 >100 mL/h + HR ↑ + Hb 进行性下降 → 紧急处理;</li>                 <li><strong>② 肝功能衰竭(术后 3-5 天):</strong>"50-50 标准"—— 术后 5 天 TBil >50 μmol/L + PT <50% → 高度警惕;</li>                 <li><strong>③ 胆漏(术后 5-7 天):</strong>引流液胆红素 >血清 3 倍 + 引流量增加 → 充分引流 + 营养支持;</li>                 <li><strong>④ 膈下感染(术后 5-10 天):</strong>反复发热 + 右肩背痛 + CT 见膈下积液 → 穿刺引流 + 抗感染;</li>                 <li><strong>⑤ 门静脉血栓:</strong>腹胀 + 肝功能急剧恶化 + 彩超/CT 确诊 → 抗凝或溶栓;</li>                 <li><strong>⑥ 胸腔积液(右侧多见,术后 3-5 天):</strong>影像学确诊,大量积液需穿刺引流;</li>                 <li><strong>⑦ 切口并发症:</strong>感染、脂肪液化、切口疝(晚期)。</li>               </ul>               <strong>本例术后经过:</strong>术后第 3 天出现一过性 TBil 升至 35 μmol/L,PT 轻度延长,加强保肝支持后第 5 天恢复;引流液清亮,无胆漏;未出现其他并发症。术后第 8 天拔除引流管,第 12 天出院。
+},
+{
+label: "病例总结与思维回顾",
+content: <strong>本病例完整诊疗流程回顾:</strong>               <ul>                 <li><strong>1️⃣ 病史采集</strong>:敏锐识别"HBV + 肝硬化 + 家族肝癌史 + 消瘦"高危组合;</li>                 <li><strong>2️⃣ 体格检查</strong>:通过肝硬化体征 + 肝区包块形成初步印象;</li>                 <li><strong>3️⃣ 辅助检查</strong>:AFP + 增强 CT "快进快出"完成临床诊断;</li>                 <li><strong>4️⃣ 术前评估</strong>:Child A + ICG 12.8% + 残肝 45% 综合达标;</li>                 <li><strong>5️⃣ MDT 决策</strong>:多学科协作制定解剖性右半肝切除方案;</li>                 <li><strong>6️⃣ 术中执行</strong>:低 CVP + Pringle + 解剖性切除,精准安全;</li>                 <li><strong>7️⃣ 围手术期管理</strong>:肝功能保护 + 营养 + 抗病毒 + VTE 预防全面到位;</li>                 <li><strong>8️⃣ 并发症预防</strong>:识别时间窗 + 及时干预 + 无重大并发症;</li>                 <li><strong>9️⃣ 长期随访</strong>:术后每 3 月 AFP + 增强 CT,5 年以上随访。</li>               </ul>               <strong>临床思维要点:</strong>本例充分体现了"<strong>精准外科 + 安全外科 + 快速康复</strong>"三位一体的现代肝胆外科理念,是肝癌规范化外科治疗的典型案例。
+}
+];
+const caseDecisions = [
+{
+title: "本例最佳手术方案选择?请结合肝功能储备、肿瘤学特征与残肝体积综合判断。",
+options: [
+{ letter: "A", text: "TACE 介入治疗,3 月后再评估手术" },
+{ letter: "B", text: "解剖性右半肝切除术(+ 必要时胆囊切除)" },
+{ letter: "C", text: "B 超/CT 引导下射频消融治疗" },
+{ letter: "D", text: "肝移植评估" }
+],
+correct: 1,
+feedback: "<strong>正确答案:B. 解剖性右半肝切除术。</strong><br><br><strong>判断依据:</strong>① BCLC A 期早期肝癌(单发、<strong>无血管侵犯、无转移</strong>);② Child-Pugh A 级、ICG-R15 = 12.8%、残肝体积 45% → 肝功能储备三指标均达标;③ 肿瘤 6.2 cm 单发局限于右叶 → 适合解剖性切除;④ 解剖性切除可切除荷瘤门脉所支配的肝段,降低微转移残留,术后复发率显著低于非解剖性切除。<br><br><strong>其他方案为何不选:</strong>TACE 适用于不能手术或作为新辅助;射频消融适用于 ≤3 cm 病灶,6.2 cm 单发病灶首选手术;肝移植主要适用于 Milan 标准内的早期肝癌,且供肝受限,在可切除且肝储备良好时不作首选。"
+}
+];
+// 知识库数据
+const libraryData = {
+liver: {
+name: "原发性肝癌",
+en: "Primary Liver Cancer / Hepatocellular Carcinoma (HCC)",
+tags: ["外科·肝胆", "高发恶性肿瘤", "围手术期复杂", "教学核心病种"],
+quickStats: [
+{ label: "疾病分类", val: "外科·肿瘤" },
+{ label: "教学难度", val: "★★★★☆" },
+{ label: "配套病例", val: "8 例" },
+{ label: "学习时长", val: "≈ 4 小时" }
+],
+highlights: [
+{ type: "primary", title: "⛯ 教学重点", text: "肝癌的"快进快出"影像学典型表现、肝功能储备综合评估(Child-Pugh + ICG-R15 + 残肝体积)、解剖性肝切除的临床意义、术后复发与转移监测。" },
+{ type: "warn", title: "⚠ 教学难点", text: "Child-Pugh、ICG-R15 与残肝体积的综合应用;肝癌门静脉癌栓的处理;肝硬化基础上肝切除的安全性把握;术后早期肝功能衰竭的识别。" },
+{ type: "success", title: "⊕ 临床思维提示", text: "建立"基础肝病评估—肿瘤学评估—肝储备评估—手术决策—多模态综合治疗"的整体思维链。强调"精准外科 + 安全外科"统一性。" }
+],
+sections: [
+{ title: "疾病定义", content: "原发性肝癌指起源于肝脏上皮组织的恶性肿瘤,主要包括<strong>肝细胞癌(HCC,占 85-90%)</strong>、肝内胆管癌(ICC)及混合型肝癌。本节重点为 HCC。我国每年新发约 41 万例,发病率与死亡率均居恶性肿瘤前列。" },
+{ title: "解剖与生理基础", content: "<strong>肝脏分段(Couinaud):</strong>肝脏分为左、右两叶,基于肝段门脉与肝静脉的分布分为 8 段。门静脉、肝动脉、胆管在<strong>肝门</strong>处汇合(肝十二指肠韧带内)。<br><strong>肝脏血供:</strong>双重血供(肝动脉 25% + 门静脉 75%)。<strong>HCC 血供特点:</strong>主要由肝动脉供血,是"快进快出"影像学表现的解剖学基础。<br><strong>肝再生能力:</strong>正常情况下切除 70% 仍可代偿,但肝硬化时再生能力显著下降,这是术前肝储备评估的关键理论基础。" },
+{ title: "病因与发病机制", content: "<ul><li><strong>慢性 HBV/HCV 感染</strong>(我国 HCC 患者 80% 以上有 HBV 感染,HBV-X 蛋白致癌机制);</li><li>长期酗酒致酒精性肝硬化;</li><li>黄曲霉毒素污染食物(南方地区 AFB1);</li><li>非酒精性脂肪性肝病(NAFLD,新兴重要病因);</li><li>遗传代谢性肝病(血色病、Wilson 病、α1-抗胰蛋白酶缺乏);</li><li>致癌机制:<em>慢性炎症 → 肝硬化 → 异型增生结节 → 早期肝癌 → 进展期肝癌</em>的"三部曲"演变。</li></ul>" },
+{ title: "临床表现", content: "<strong>早期:</strong>多无明显症状,体检或筛查发现。<br><strong>进展期:</strong>① 肝区疼痛(钝痛/胀痛);② 消瘦乏力、食欲下降;③ 腹胀、肝大或腹部包块;④ 肝硬化失代偿表现(腹水、脾大、消化道出血);⑤ 副肿瘤综合征(红细胞增多、低血糖、高钙血症)。<br><strong>晚期:</strong>黄疸、恶病质、远处转移症状(肺、骨、脑)、腹水血性。<br><strong>并发症:</strong><em>肝癌破裂出血</em>(急腹症)、肝性脑病、癌栓形成、上消化道出血。" },
+{ title: "诊断思路", content: "<strong>临床诊断三步法:</strong><ul><li>① <strong>高危人群筛查</strong>(HBV/HCV/肝硬化患者每 6 月 B 超 + AFP);</li><li>② <strong>影像学确诊</strong>:动态增强 CT/MRI 见<em>"快进快出"典型表现</em> + 病灶 >2 cm → 临床诊断成立;</li><li>③ 不典型者行肝活检(注意种植转移)。</li></ul><strong>肿瘤标志物:</strong>AFP(HCC 特异性)、PIVKA-Ⅱ(AFP 阴性补充)、AFP-L3。<br><strong>分期评估:</strong>BCLC 分期(国际)、CNLC 分期(中国)、AJCC TNM 分期。" },
+{ title: "鉴别诊断", content: "需与<strong>肝转移癌</strong>(常多发、无慢性肝病史)、<strong>肝血管瘤</strong>(典型"快进慢出")、<strong>肝腺瘤</strong>(育龄女性,服避孕药史)、<strong>局灶性结节增生 FNH</strong>(中央瘢痕)、<strong>肝脓肿</strong>(发热、脓肿壁征)、<strong>肝内胆管癌</strong>(肝内胆管扩张)等鉴别。<br><strong>鉴别要点:</strong>病史背景、肿瘤标志物、影像学动态强化模式、必要时活检。" },
+{ title: "治疗原则", content: "<strong>分期治疗原则(BCLC 为核心):</strong><ul><li><strong>外科切除:</strong>BCLC 0/A 期首选,要求 Child A 级、ICG 适宜、残肝体积充足;</li><li><strong>肝移植:</strong>Milan 标准(单发 ≤5 cm,或 ≤3 个且均 ≤3 cm,无血管侵犯无转移)内早期肝癌的根治性手段;</li><li><strong>消融治疗:</strong>RFA、MWA 适用于 ≤3 cm 单发病灶或手术禁忌者;</li><li><strong>TACE:</strong>BCLC B 期首选,中晚期主要手段;</li><li><strong>系统治疗:</strong>靶向(索拉非尼、仑伐替尼、瑞戈非尼)+ 免疫治疗(PD-1/PD-L1,如阿替利珠单抗 + 贝伐珠单抗);</li><li><strong>多模态综合治疗:</strong>提高总体生存率,是现代肝癌治疗发展方向。</li></ul>" },
+{ title: "手术适应证与禁忌证", content: "<strong>适应证:</strong>① Child A 级 / 部分 B 级早期肝癌;② 肿瘤局限于一叶或半肝;③ 无门脉主干 / 下腔静脉癌栓(分支癌栓可选择性手术);④ 无远处转移;⑤ 残肝体积满足需求(<em>正常肝 ≥40%,硬化肝 ≥30%</em>);⑥ 全身情况可耐受手术。<br><strong>禁忌证:</strong>① Child C 级失代偿期;② 弥漫性肝癌或多中心病灶;③ 大血管侵犯不可切除;④ 远处转移;⑤ 合并严重心肺等全身性疾病不能耐受;⑥ 拒绝手术。" },
+{ title: "围手术期处理", content: "<ul><li><strong>术前:</strong>肝功能储备评估(Child + ICG + 残肝体积"三位一体")、<em>抗病毒治疗</em>(HBV-DNA 阳性者恩替卡韦)、营养支持(尤其低蛋白者)、纠正凝血、必要时术前门静脉栓塞(PVE)增加残肝体积;</li><li><strong>术中:</strong>低中心静脉压麻醉(CVP 2-5 cmH₂O)、Pringle 法控制出血(常温阻断 ≤60 分钟)、规范化解剖性切除、精细断肝技术(超声刀/CUSA);</li><li><strong>术后:</strong>保肝治疗、营养支持、抗感染、监测肝功能与凝血、VTE 预防、继续抗病毒、预防门静脉血栓。</li></ul>" },
+{ title: "常见并发症", content: "<ul><li><strong>肝功能衰竭</strong>(术后 3-5 天,"50-50 标准":D5 TBil >50 μmol/L + PT <50%);</li><li><strong>腹腔出血</strong>(术后 24-48 小时高危);</li><li><strong>胆漏</strong>(引流液胆红素 >血清 3 倍);</li><li><strong>膈下感染 / 腹腔感染</strong>(术后 5-10 天);</li><li><strong>门静脉血栓形成</strong>(腹胀、肝功能急剧恶化);</li><li>胸腔积液(右侧多见);</li><li><strong>肝癌术后早期复发</strong>(2 年内,主要为肝内播散);</li><li>切口感染、切口疝。</li></ul>" },
+{ title: "临床思维训练要点", content: "① 建立"<em>病因—基础病—肿瘤评估—肝储备—手术决策—综合治疗—长期随访</em>"完整链条;② 强化多学科会诊(MDT)思维;③ 培养肝癌精准外科理念(解剖性切除、微创手术、ERAS);④ 掌握分期治疗的现代综合策略;⑤ 重视术后早期复发预防与监测;⑥ 树立终身随访意识(肝癌 5 年复发率 >50%)。" }
+]
+},
+portal: {
+name: "门脉高压症",
+en: "Portal Hypertension",
+tags: ["外科·肝胆", "急诊处置", "围手术期高风险", "多学科协作"],
+quickStats: [
+{ label: "疾病分类", val: "外科·肝胆" },
+{ label: "教学难度", val: "★★★★★" },
+{ label: "配套病例", val: "6 例" },
+{ label: "学习时长", val: "≈ 5 小时" }
+],
+highlights: [
+{ type: "primary", title: "⛯ 教学重点", text: "门脉高压症的发病机制、食管胃底静脉曲张破裂出血(EVB)的急诊处理流程、外科分流术与断流术的选择、TIPS 的适应证。" },
+{ type: "warn", title: "⚠ 教学难点", text: "TIPS 与外科手术的指征把握;肝功能 C 级患者的处理策略;肝性脑病的预防与处理;三腔二囊管规范使用。" },
+{ type: "success", title: "⊕ 临床思维提示", text: "建立"急诊抢救—出血控制—病因治疗—长期管理—肝移植评估"的全程思维。体现"先救命后治病"的急诊外科理念。" }
+],
+sections: [
+{ title: "疾病定义", content: "门脉高压症是指由各种原因导致<strong>门静脉血流受阻和(或)门静脉血流量增加</strong>,使门静脉系统压力升高(门脉压 >12 mmHg 或肝静脉压力梯度 HVPG >5 mmHg,临床显著性 >10 mmHg)所引起的一系列临床症候群,主要表现为<strong>脾大、脾功能亢进、食管胃底静脉曲张破裂出血及腹水</strong>。" },
+{ title: "解剖与生理基础", content: "<strong>门静脉系统解剖:</strong>门静脉由肠系膜上静脉、脾静脉汇合而成,收集腹腔脏器(除肝外)的血液回流入肝。<br><strong>四大重要交通支(侧支循环):</strong><ul><li>① <strong>食管胃底静脉</strong>(最重要,破裂出血死亡率高);</li><li>② 直肠下端静脉(形成痔静脉扩张);</li><li>③ 脐周静脉(形成"海蛇头");</li><li>④ 腹膜后静脉(Retzius 静脉)。</li></ul>门脉高压时这些交通支代偿性扩张,但带来破裂出血风险。" },
+{ title: "病因与发病机制", content: "<strong>按梗阻部位分类:</strong><ul><li><strong>肝前型:</strong>门静脉血栓、海绵样变、外压(如肿瘤);</li><li><strong>肝内型(最常见,占 90%):</strong><em>窦前性</em>(血吸虫病)、<em>窦性</em>(肝硬化,最常见)、<em>窦后性</em>(Budd-Chiari 综合征);</li><li><strong>肝后型:</strong>肝静脉阻塞、下腔静脉阻塞、缩窄性心包炎。</li></ul>我国以<strong>肝炎后肝硬化</strong>最常见,其次血吸虫病。" },
+{ title: "临床表现", content: "<strong>三大主要临床表现:</strong><ul><li>① <strong>脾大、脾功能亢进:</strong>三系减少(贫血、白细胞/血小板减少);</li><li>② <strong>食管胃底静脉曲张破裂出血(EVB):</strong>呕鲜血、黑便,失血量大可休克、致死;</li><li>③ <strong>腹水:</strong>提示病情进展至失代偿期,管理难度增加。</li></ul>其他表现:腹壁静脉曲张("海蛇头")、痔疮、肝掌、蜘蛛痣、男性乳腺发育、肝性脑病等肝功能不全表现。" },
+{ title: "诊断思路", content: "<ul><li>① 病史:慢性肝病、肝炎史、饮酒史、血吸虫疫区史;</li><li>② 体征:脾大、腹壁静脉曲张、腹水、肝掌、蜘蛛痣;</li><li>③ 实验室:三系减少、肝功能异常、凝血延长、AFP 排癌;</li><li>④ 影像学:腹部 B 超/CT 见门静脉增宽(>1.3 cm)、脾大、侧支循环;</li><li>⑤ <strong>内镜</strong>:确认食管胃底静脉曲张程度(轻/中/重度,有无红色征);</li><li>⑥ <strong>肝静脉压力梯度(HVPG)测定:</strong>>10 mmHg 为临床显著性门脉高压,>12 mmHg 有破裂出血风险。</li></ul>" },
+{ title: "鉴别诊断", content: "<strong>脾大鉴别:</strong>需与脾肿瘤、再生障碍性贫血、白血病、淋巴瘤等血液病所致脾大鉴别(超声、骨髓、淋巴结活检)。<br><strong>消化道出血鉴别:</strong>消化性溃疡、急性糜烂出血性胃炎、Mallory-Weiss 综合征、胃癌、胆道出血、血管畸形(急诊胃镜为金标准)。" },
+{ title: "治疗原则", content: "<strong>急性出血处理(抢救):</strong>① 抗休克扩容 + 限制性输血(Hb 目标 70-80 g/L);② 药物降门压(<em>生长抑素、特利加压素</em>);③ 内镜套扎(EVL)或硬化剂注射;④ 三腔二囊管压迫(过渡);⑤ <strong>TIPS</strong>(经颈静脉肝内门腔分流术);⑥ 急诊外科手术(罕用)。<br><strong>预防出血(长期管理):</strong><em>非选择性 β 受体阻滞剂(普萘洛尔/卡维地洛) + 内镜下套扎(EVL)</em>联合治疗。<br><strong>外科治疗:</strong>① <strong>断流术</strong>(贲门周围血管离断 + 脾切除,我国常用);② <strong>分流术</strong>(脾肾分流、远端脾肾分流、肠腔分流);③ <strong>肝移植</strong>(终末期首选)。" },
+{ title: "手术适应证与禁忌证", content: "<strong>适应证:</strong>① 反复呕血,内镜与药物治疗失败;② 巨脾合并脾功能亢进严重(三系明显减少);③ 难治性腹水(分流术或 TIPS);④ 一级预防(高危静脉曲张患者、HVPG >12 mmHg)。<br><strong>禁忌证(相对):</strong>① Child C 级失代偿期(应考虑肝移植);② 严重凝血障碍未纠正;③ 终末期肝病;④ 全身重要脏器功能衰竭;⑤ 严重肝性脑病病史(分流术禁忌)。" },
+{ title: "围手术期处理", content: "<ul><li><strong>术前:</strong>充分评估肝功能(Child-Pugh、MELD 评分);纠正凝血(维生素 K、新鲜冰冻血浆、血小板);控制腹水(限盐 + 利尿);预防肝性脑病(乳果糖);治疗 HBV;营养支持;</li><li><strong>术中:</strong>注意减少出血、保护残余肝功能、控制门脉压、精细操作;</li><li><strong>术后:</strong>严密监测肝功能、凝血、血氨、电解质;<em>预防门静脉血栓形成</em>(抗凝平衡);乳果糖通便维持每日 2-3 次软便;利福昔明选择性肠道抗菌;低蛋白饮食过渡(40-60 g/d);警惕肝性脑病(性格改变、扑翼样震颤)。</li></ul>" },
+{ title: "常见并发症", content: "<ul><li>再次出血(术后近期或远期,断流术比分流术高);</li><li><strong>肝性脑病</strong>(分流术后高发,20-40%);</li><li>门静脉血栓形成(脾切除术后高危);</li><li>肝功能衰竭;</li><li>腹腔感染、膈下感染;</li><li>胰瘘(脾切除时);</li><li>分流口血栓 / 狭窄(分流术);</li><li>血小板反跳性增高(脾切后);</li><li>切口并发症。</li></ul>" },
+{ title: "临床思维训练要点", content: "① 急诊出血处理强调<em>"抢救生命—控制出血—防止再出血"</em>的优先级;② 阶梯化、个体化治疗策略;③ TIPS 与外科手术的合理选择(肝功能、HVPG、脑病风险);④ 终末期患者向肝移植转介的时机判断;⑤ 全程多学科协作意识(肝病科、介入科、外科);⑥ 重视患者长期生活质量与心理支持。" }
+]
+},
+gallstone: {
+name: "胆石症",
+en: "Cholelithiasis",
+tags: ["外科·肝胆", "常见多发病", "微创外科典范", "LC 安全文化"],
+quickStats: [
+{ label: "疾病分类", val: "外科·肝胆" },
+{ label: "教学难度", val: "★★★☆☆" },
+{ label: "配套病例", val: "10 例" },
+{ label: "学习时长", val: "≈ 3 小时" }
+],
+highlights: [
+{ type: "primary", title: "⛯ 教学重点", text: "Charcot 三联征与 Reynolds 五联征的临床意义;LC 的"安全文化"理念;Calot 三角的精准解剖识别;胆总管结石多模式治疗。" },
+{ type: "warn", title: "⚠ 教学难点", text: "胆道损伤的预防与处理;胆总管结石的综合治疗策略(ERCP/LC/开腹);急性胆管炎 AOSC 的急诊处置;困难胆囊的识别。" },
+{ type: "success", title: "⊕ 临床思维提示", text: "建立"分类诊断—手术指征—术式选择—损伤预防—术后管理"的完整路径,强调<em>"看不清不切"</em>的安全文化与"有疑必中转"的决策智慧。" }
+],
+sections: [
+{ title: "疾病定义", content: "胆石症是指胆道系统(胆囊或胆管)发生结石的疾病,根据结石部位分为<strong>胆囊结石、肝外胆管结石和肝内胆管结石</strong>。我国以胆固醇结石为主(70-80%)。总体发病率 10-15%,女性多见。" },
+{ title: "解剖与生理基础", content: "<strong>胆道系统解剖:</strong>肝内胆管 → 左右肝管 → 肝总管 → + 胆囊管 → 胆总管 → Vater 壶腹(与胰管汇合)→ Oddi 括约肌 → 十二指肠乳头。<br><strong>Calot 三角(胆囊三角,LC 手术核心区):</strong>由<em>胆囊管、肝总管、肝下缘</em>构成,内含胆囊动脉,是腹腔镜胆囊切除术的关键解剖结构。<br><strong>胆汁生理:</strong>胆汁由肝脏分泌,胆囊储存浓缩,进餐时胆囊收缩排入十二指肠,参与脂肪消化。胆汁酸肠肝循环 95%。" },
+{ title: "病因与发病机制", content: "<strong>胆固醇结石形成"四 F"高危因素:</strong><ul><li>Female(女性);</li><li>Forty(40 岁以上);</li><li>Fat(肥胖);</li><li>Fertile(多产)。</li></ul>其他:糖尿病、高脂血症、长期肠外营养、溶血性疾病(色素性结石)、胆道感染、遗传、快速减重等。<br><strong>形成机制:</strong>① 胆固醇过饱和;② 成核因子增加;③ 胆囊收缩功能下降。" },
+{ title: "临床表现", content: "<strong>胆囊结石:</strong>多数无症状(50%);典型表现为<em>胆绞痛</em>(右上腹/上腹部痛,向右肩背放射,与油腻饮食相关);Murphy 征阳性。<br><strong>胆总管结石:</strong><em>Charcot 三联征</em>(腹痛 + 寒战高热 + 黄疸);严重者 <em>Reynolds 五联征</em>(三联征 + 休克 + 神志改变),提示<strong>急性梗阻性化脓性胆管炎(AOSC)</strong>,死亡率极高,需紧急处理。<br><strong>肝内胆管结石:</strong>反复发作的胆管炎、肝萎缩、胆汁性肝硬化、肝脓肿。" },
+{ title: "诊断思路", content: "<ul><li>① <strong>B 超</strong>:首选筛查,胆囊结石阳性率 >95%,可见强回声团伴声影;</li><li>② <strong>MRCP</strong>:胆管结石的无创首选,可清晰显示胆道系统;</li><li>③ <strong>ERCP</strong>:既可诊断也可治疗(EST 取石),但有操作并发症(胰腺炎 3-5%);</li><li>④ <strong>CT</strong>:对钙化结石及并发症评估,可发现胆管扩张、胰腺炎等;</li><li>⑤ <strong>EUS(内镜超声)</strong>:微小结石及壶腹部病变;</li><li>⑥ 实验室:血常规、肝功能、胰酶、凝血。</li></ul>" },
+{ title: "鉴别诊断", content: "需与<strong>消化性溃疡</strong>(节律性疼痛)、<strong>急性胰腺炎</strong>(淀粉酶)、<strong>肾绞痛</strong>(血尿、肾区叩痛)、<strong>心绞痛</strong>(尤其老年下壁缺血放射至上腹)、<em>胆道蛔虫病</em>(钻顶样痛)、<em>胆囊息肉</em>(影像)、<strong>胆囊癌</strong>(重要鉴别,晚期黄疸)等鉴别。" },
+{ title: "治疗原则", content: "<ul><li><strong>无症状胆囊结石:</strong>定期随访,有手术指征时手术;</li><li><strong>有症状胆囊结石:</strong>首选<em>腹腔镜胆囊切除术(LC)</em>;</li><li><strong>胆总管结石:</strong>① <em>ERCP + EST 取石</em>(首选,尤其无胆囊结石者);② 腹腔镜胆总管探查(有经验中心);③ 开腹胆总管切开取石 + T 管引流(复杂或失败后);</li><li><strong>肝内胆管结石:</strong>个体化方案,胆管切开取石、肝叶/段切除、胆肠吻合(Roux-en-Y)等;</li><li><strong>急性胆管炎(AOSC):</strong><em>抗感染 + 急诊胆道减压</em>(ERCP/PTCD/手术)是关键。</li></ul>" },
+{ title: "手术适应证与禁忌证", content: "<strong>胆囊切除适应证:</strong>① 有症状胆囊结石(胆绞痛反复发作);② 结石直径 >2-3 cm(癌变风险);③ 充满型结石或<em>瓷化胆囊</em>(癌变风险 20-30%);④ 合并胆囊息肉 >1 cm 或 <1 cm 快速增大;⑤ 糖尿病患者胆囊结石(并发症风险高);⑥ 反复发作胆囊炎;⑦ 儿童胆囊结石。<br><strong>相对禁忌证:</strong>严重心肺功能不全、未控制凝血障碍、晚期肝硬化失代偿、急性化脓性胆囊炎超过 72 小时(相对,建议先保守)。" },
+{ title: "围手术期处理", content: "<ul><li><strong>术前:</strong>禁食 8h、禁饮 2h;评估心肺功能;<em>MRCP 排除胆总管结石</em>(重要);预防性抗生素(高危者);备血。</li><li><strong>术中:</strong>严格<em>"三管一壶腹"识别</em>(胆囊管、肝总管、胆总管 + Hartmann 袋);避免过度电凝损伤胆管血供;钝性分离为主;必要时术中胆道造影;<em>复杂情况果断中转开腹</em>(荣誉而非失败)。</li><li><strong>术后:</strong>早期下床、半流质过渡;观察引流液;低脂饮食 3-6 月过渡;警示性症状宣教。</li></ul>" },
+{ title: "常见并发症", content: "<ul><li><strong>胆道损伤</strong>(LC 最严重并发症,发生率 0.3-0.5%):分为胆漏、胆管狭窄、胆管横断,处理复杂,影响终身生活质量;</li><li>术后出血(胆囊动脉、肝床);</li><li>残余结石(胆总管,1-2%);</li><li>胆囊切除后综合征(腹泻、腹胀、消化不良);</li><li>切口感染、肺部感染;</li><li>深静脉血栓;</li><li>气栓(罕见但致命)。</li></ul>" },
+{ title: "临床思维训练要点", content: "① 树立<em>"安全胆囊切除"</em>理念,严格"三管一壶腹"识别原则;② 掌握"看不清不切、有疑必中转"的外科判断;③ 围绕 Calot 三角的精细解剖意识;④ 急性胆管炎的急诊处置时序(<em>"抗感染 + 减压"的 6 小时原则</em>);⑤ 多模态治疗胆道结石的整体观念;⑥ 胆囊癌预防意识(充满型结石、瓷化胆囊、大息肉)。" }
+]
+},
+pancreatitis: {
+name: "急性胰腺炎",
+en: "Acute Pancreatitis",
+tags: ["外科·肝胆胰", "急危重症", "现代理念变革", "MDT 协作典型"],
+quickStats: [
+{ label: "疾病分类", val: "外科·肝胆胰" },
+{ label: "教学难度", val: "★★★★★" },
+{ label: "配套病例", val: "7 例" },
+{ label: "学习时长", val: "≈ 5 小时" }
+],
+highlights: [
+{ type: "primary", title: "⛯ 教学重点", text: "亚特兰大分类与多评分系统的综合应用;早期<em>目标导向液体复苏</em>理念;Step-up Approach 创伤递升原则;早期肠内营养。" },
+{ type: "warn", title: "⚠ 教学难点", text: "重症急性胰腺炎(SAP)的全程管理;局部并发症(WON、感染性坏死)的影像学识别与干预时机;早期肠内营养实施;ACS 识别。" },
+{ type: "success", title: "⊕ 临床思维提示", text: "建立"分类诊断—严重程度评估—液体复苏—病因处理—并发症识别—外科干预"的现代化诊疗思维。体现"少即是多"的现代治疗理念。" }
+],
+sections: [
+{ title: "疾病定义", content: "急性胰腺炎是多种病因导致胰酶在胰腺内被激活后引起胰腺组织<strong>自身消化、水肿、出血甚至坏死</strong>的炎性反应。临床以急性上腹痛、恶心呕吐、发热及血淀粉酶升高为特征。总体死亡率 1-2%,重症(SAP)死亡率 20-30%。" },
+{ title: "解剖与生理基础", content: "<strong>胰腺解剖:</strong>胰腺位于<em>腹膜后</em>,横跨第 1-2 腰椎水平。分为头、颈、体、尾四部分。<br><strong>胰腺导管系统:</strong>主胰管(Wirsung 管)与副胰管(Santorini 管),主胰管与胆总管在 Vater 壶腹汇合,经 Oddi 括约肌开口于十二指肠乳头。<br><strong>双重功能:</strong>外分泌(胰液,含多种消化酶) + 内分泌(胰岛 α/β/δ 细胞分泌胰高血糖素、胰岛素、生长抑素)。<br><strong>病理生理:</strong>胰酶异常激活 → 胰腺自身消化 → 局部炎症 → SIRS → 器官衰竭 → MODS。" },
+{ title: "病因与发病机制", content: "<ul><li><strong>胆源性(我国最常见,50-60%):</strong>胆石、胆道感染致 Oddi 括约肌痉挛、胰管梗阻、胆汁反流;</li><li><strong>酒精性</strong>(西方国家常见,30-40%);</li><li><strong>高脂血症性:</strong>甘油三酯 >11.3 mmol/L(近年增多);</li><li><strong>医源性:</strong>ERCP 术后(3-5%);</li><li>其他:暴饮暴食、腹部外伤、药物(噻嗪类、ACEI)、自身免疫、遗传、高钙血症、特发性等。</li></ul>" },
+{ title: "临床表现", content: "<strong>典型症状:</strong>① 突发<em>上腹剧痛</em>,向腰背部放射,持续不缓解;② 恶心、呕吐(吐后腹痛不缓解);③ 发热;④ 黄疸(胆源性)。<br><strong>体征:</strong>上腹压痛、肌紧张;严重者 <em>Grey-Turner 征</em>(腰部蓝紫)、<em>Cullen 征</em>(脐周蓝紫),提示出血坏死性胰腺炎。<br><strong>全身表现:</strong>SIRS、休克、ARDS、AKI、MOF。" },
+{ title: "诊断思路", content: "<strong>诊断标准</strong>(满足三条中两条):<ul><li>① 与急性胰腺炎相符的腹痛;</li><li>② 血清淀粉酶或脂肪酶 >正常上限 3 倍(<em>脂肪酶特异性更高、持续更久</em>);</li><li>③ 影像学(增强 CT/MRI)发现胰腺炎特征性改变。</li></ul><strong>严重程度评估:</strong>亚特兰大分类(MAP/MSAP/SAP);<em>Ranson 评分</em>(入院+48h)、<em>APACHE Ⅱ</em>(ICU)、<em>BISAP</em>(24h)、<em>CTSI</em>(影像)综合应用。" },
+{ title: "鉴别诊断", content: "需与<strong>消化道穿孔</strong>(气腹征)、<strong>急性胆囊炎</strong>(Murphy 征)、<strong>急性胆管炎</strong>(Charcot 三联征)、<strong>肠系膜缺血</strong>(症状体征不符)、<strong>急性心肌梗死</strong>(下壁)、<strong>肠梗阻</strong>、<strong>异位妊娠破裂</strong>等鉴别。<br><strong>鉴别要点:</strong>腹痛性质、放射部位、体征、酶学、影像学(增强 CT 金标准)。" },
+{ title: "治疗原则", content: "<ul><li><strong>支持治疗(基石):</strong>禁食、胃肠减压、<em>目标导向液体复苏</em>(前 24h 2500-4000 mL)、镇痛(避免吗啡)、营养支持;</li><li><strong>抑制胰酶分泌:</strong>生长抑素及类似物(奥曲肽);</li><li><strong>抑酸:</strong>PPI;</li><li><strong>抗生素:</strong>仅用于感染性坏死,<em>不预防性使用</em>;</li><li><strong>病因治疗:</strong>胆源性者早期 ERCP(24-72h);高脂血症性者降脂、血液净化;</li><li><strong>器官支持:</strong>ICU 综合救治(CRRT、机械通气等);</li><li><strong>外科治疗:</strong>遵循 <em>Step-up Approach</em> 创伤递升原则。</li></ul>" },
+{ title: "手术适应证与禁忌证", content: "<strong>适应证:</strong>① 感染性胰腺坏死(>4 周,需干预);② 持续腹腔间隔综合征(膀胱压 >20 mmHg + 器官功能障碍);③ 假性囊肿 >6 cm、持续 >6 周或并发症时(出血、感染、压迫);④ 胆源性胰腺炎合并胆道梗阻 → 早期 ERCP;⑤ 胆总管结石残留。<br><strong>原则:延迟手术、首选微创。</strong><br><strong>Step-up Approach:</strong>A 步:经皮穿刺引流(PCD) → B 步:微创清创(VARD、内镜) → C 步:开放手术(仅 30% 需要)。" },
+{ title: "围手术期处理", content: "<ul><li><strong>术前:</strong>充分支持治疗;评估器官功能;影像学精准定位坏死灶;纠正水电解质;改善营养;</li><li><strong>术中:</strong>微创优先(VARD、内镜清创);充分引流;尽可能保护胰腺残余功能;避免过度清创;</li><li><strong>术后:</strong>持续灌洗引流;严密监测器官功能;早期肠内营养(鼻空肠管);预防出血与肠瘘;监测感染与脓毒症;多次干预常有必要。</li></ul>" },
+{ title: "常见并发症", content: "<strong>局部并发症(按亚特兰大 2012):</strong><ul><li>急性胰周液体积聚(APFC,<4 周);</li><li>急性坏死性积聚(ANC,<4 周);</li><li>胰腺假性囊肿(>4 周,有囊壁);</li><li>包裹性坏死(WON,>4 周);</li><li><em>感染性坏死</em>(高死亡率,需 Step-up)。</li></ul><strong>全身并发症:</strong>ARDS、AKI、DIC、<em>腹腔间隔综合征(ACS)</em>、MOF、脓毒症、上消化道出血、胰瘘、结肠瘘、血管并发症(假性动脉瘤)。" },
+{ title: "临床思维训练要点", content: "① 掌握现代亚特兰大分类与严重程度评估体系;② 建立<em>"目标导向液体复苏"</em>理念(而非盲目大量);③ 理解 Step-up Approach 的现代外科干预策略;④ 早期肠内营养意识(而非禁食等待);⑤ MDT 协作处理重症胰腺炎全程管理;⑥ 避免过度治疗(预防性抗生素、早期开腹清创);⑦ ACS 的敏感识别(膀胱压监测)。" }
+]
+},
+appendicitis: {
+name: "急性阑尾炎",
+en: "Acute Appendicitis",
+tags: ["外科·普外", "最常见急腹症", "鉴别诊断教学典型", "微创首选"],
+quickStats: [
+{ label: "疾病分类", val: "外科·普外" },
+{ label: "教学难度", val: "★★★☆☆" },
+{ label: "配套病例", val: "12 例" },
+{ label: "学习时长", val: "≈ 3 小时" }
+],
+highlights: [
+{ type: "primary", title: "⛯ 教学重点", text: "<em>转移性右下腹痛</em>的临床意义与病理生理;典型与不典型表现的识别;手术时机的把握;腹腔镜阑尾切除术(LA)的应用。" },
+{ type: "warn", title: "⚠ 教学难点", text: "特殊人群(妊娠、儿童、老年)阑尾炎的诊断;阑尾周围脓肿的处理;系统性鉴别诊断(尤其妇科疾病);Alvarado 评分综合应用。" },
+{ type: "success", title: "⊕ 临床思维提示", text: "建立"症状识别—系统鉴别—严重度评估—手术决策—并发症预防"的全流程思维。要警惕老年与妊娠期不典型表现。作为外科鉴别诊断经典教学素材。" }
+],
+sections: [
+{ title: "疾病定义", content: "急性阑尾炎是阑尾的化脓性炎症,是<strong>最常见的外科急腹症</strong>之一,发病率约为 7-10%。任何年龄均可发病,以 20-30 岁青壮年最多见,男女比例约 1.4:1。" },
+{ title: "解剖与生理基础", content: "<strong>阑尾解剖:</strong>起自盲肠后内侧,长 6-8 cm,盲端,管腔细小(4-6 mm)。体表投影为 <em>McBurney 点</em>(脐与右髂前上棘连线中外 1/3 交界处)。<br><strong>位置变异(5 型):</strong>① 回肠前位(最常见);② 回肠后位;③ 盆位(女性常见);④ 盲肠后位(诊断困难);⑤ 盲肠下位。<br><strong>血供:</strong>阑尾动脉(回结肠动脉分支),为<em>终末动脉</em>,易致缺血坏死、穿孔。<br><strong>神经支配:</strong>内脏神经(T10)→ 脐周初期痛;躯体神经 → 右下腹固定痛(壁层腹膜受累)。" },
+{ title: "病因与发病机制", content: "<ul><li><strong>阑尾管腔梗阻(主要原因):</strong>粪石(最常见)、寄生虫、淋巴滤泡增生(儿童)、肿瘤;</li><li><strong>细菌感染:</strong>大肠杆菌、厌氧菌等;</li><li><strong>胃肠道功能紊乱:</strong>蠕动反射;</li><li><strong>血管栓塞:</strong>致缺血坏死穿孔。</li></ul><strong>病理演变(4 型):</strong>① 急性单纯性 → ② 急性化脓性 → ③ 坏疽性及穿孔性 → ④ 阑尾周围脓肿。" },
+{ title: "临床表现", content: "<strong>典型表现"四联征":</strong><ul><li>① <em>转移性右下腹痛</em>(病理生理意义:内脏痛 → 躯体痛);</li><li>② 胃肠道症状(恶心、呕吐、食欲下降);</li><li>③ 全身症状(低热、寒战);</li><li>④ 体征:McBurney 点压痛、反跳痛、肌紧张;<em>Rovsing 征</em>(挤压左下腹引起右下腹痛)、<em>闭孔肌征</em>(盆位阑尾)、<em>腰大肌征</em>(盲肠后位阑尾)。</li></ul><strong>不典型表现:</strong>儿童(腹泻为主,易穿孔)、老年(症状轻、易误诊)、孕妇(位置上移)、异位阑尾(位置不典型)。" },
+{ title: "诊断思路", content: "<ul><li>① 病史 + 查体(<em>转移性右下腹痛 + McBurney 压痛</em>是核心);</li><li>② 实验室:WBC 10-15×10⁹/L、N% >75%、CRP 升高;</li><li>③ B 超:阑尾增粗 >7 mm、壁厚、周围积液、粪石;</li><li>④ <strong>CT</strong>:特异性 >95%,首选辅助检查(尤其不典型者);</li><li>⑤ <strong>Alvarado 评分</strong>(MANTRELS,8 项 10 分):≥7 分高度提示手术,4-6 分观察或进一步检查,≤3 分通常可排除;</li><li>⑥ 育龄女性加做妇科评估、尿 HCG。</li></ul>" },
+{ title: "鉴别诊断", content: "<strong>"六系统鉴别法":</strong><ul><li><strong>妇科(育龄女性必查):</strong>异位妊娠破裂、卵巢囊肿蒂扭转、急性盆腔炎、黄体/卵泡破裂;</li><li><strong>泌尿系:</strong>右输尿管结石、急性肾盂肾炎;</li><li><strong>消化系:</strong>急性肠胃炎、<em>Meckel 憩室炎</em>、Crohn 病、肠系膜淋巴结炎(儿童)、急性胆囊炎、急性胰腺炎、右半结肠癌穿孔(老年);</li><li><strong>呼吸系:</strong>右下肺炎放射痛(儿童);</li><li><strong>代谢性:</strong>糖尿病酮症酸中毒、过敏性紫癜;</li><li><strong>心血管:</strong>下壁心肌梗死(老年)。</li></ul>" },
+{ title: "治疗原则", content: "<strong>手术为主:</strong>① <em>单纯性 / 化脓性 / 坏疽性</em> → 急诊阑尾切除术,<strong>首选腹腔镜(LA)</strong>;② <strong>阑尾周围脓肿</strong> → 保守治疗(抗生素 ± 经皮穿刺引流),3 月后择期手术("冷静期"手术);③ <strong>弥漫性腹膜炎</strong> → 急诊手术 + 腹腔冲洗 + 引流;④ 诊断不明确 → 密切观察 ± 诊断性腹腔镜。<br><strong>非手术治疗:</strong>仅限于早期单纯性、患者拒绝手术或不能耐受手术者,需密切观察,成功率 60-80%,复发率 30%。" },
+{ title: "手术适应证与禁忌证", content: "<strong>适应证:</strong>① 一旦诊断明确,均应手术;② 反复发作的慢性阑尾炎;③ 阑尾周围脓肿吸收后(择期);④ 阑尾肿瘤(类癌、黏液囊肿)。<br><strong>相对禁忌证:</strong>① 阑尾周围脓肿急性期(优先保守);② 严重心肺功能不全;③ 凝血功能严重障碍未纠正。<br><strong>术式选择:</strong><em>腹腔镜首选</em>(恢复快、切口小、并发症少、尤其肥胖/女性/诊断不明);开腹保留指征:严重粘连、广泛腹膜炎、设备限制。" },
+{ title: "围手术期处理", content: "<ul><li><strong>术前:</strong>禁食水、补液、抗感染、必要时胃肠减压;</li><li><strong>术中:</strong>规范暴露阑尾、双道结扎、残端处理(荷包包埋或不包埋);<em>化脓/穿孔者腹腔充分冲洗 + 引流</em>;</li><li><strong>术后:</strong>早期下床(6h 后)、流质过渡、抗生素(化脓/穿孔者疗程 5-7 天)、观察引流液、监测体温与白细胞、疼痛管理与 VTE 预防。</li></ul>" },
+{ title: "常见并发症", content: "<ul><li><strong>切口感染</strong>(单纯性 5%,化脓/穿孔 10-20%,最常见);</li><li><strong>腹腔脓肿</strong>(盆腔、膈下、肠间,穿孔病例高发);</li><li>粘连性肠梗阻(远期 1-3%);</li><li>阑尾残株炎(残端 >0.5 cm);</li><li>切口出血、术后出血;</li><li>粪瘘(罕见);</li><li>门静脉炎(严重);</li><li>不孕症(女性盆腔炎症远期)。</li></ul>" },
+{ title: "临床思维训练要点", content: "① 掌握<em>转移性右下腹痛的病理生理意义</em>(内脏痛 → 躯体痛);② 建立系统性鉴别诊断思维(六系统法,尤其育龄女性);③ 把握手术时机:及时手术 vs 阑尾周围脓肿先保守;④ 妊娠期、儿童、老年特殊人群个体化处理(母婴并重、儿童穿孔早、老年排肿瘤);⑤ 树立微创外科理念;⑥ 重视并发症预防(术中冲洗、抗生素时机、早期活动)。" }
+]
+}
+};
+/* ============ 模块切换 ============ */
+function switchModule(target) {
+document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+document.querySelector(.nav-item[data-target="${target}"]).classList.add('active');
+document.getElementById(target).classList.add('active');
+window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+document.querySelectorAll('.nav-item').forEach(item => {
+item.addEventListener('click', () => switchModule(item.dataset.target));
+});
+/* ============ 跳转到知识库特定疾病 ============ */
+function goToDisease(key) {
+switchModule('library');
+setTimeout(() => selectDisease(key), 120);
+}
+/* ============ 热力图生成 ============ */
+function renderHeatmap() {
+const levels = [3,2,0,4,5,3,1, 2,3,4,5,2,0,3, 4,3,5,4,3,2,1, 3,4,5,4,5,3,2];
+const heatmap = document.getElementById('heatmap');
+if (!heatmap) return;
+heatmap.innerHTML = '';
+levels.forEach(lvl => {
+const cell = document.createElement('div');
+cell.className = 'heatmap-cell';
+cell.dataset.level = lvl;
+cell.title = 训练强度:${lvl}/5;
+heatmap.appendChild(cell);
+});
+}
+renderHeatmap();
+/* ============ 虚拟带教模块 ============ */
+let currentTeachDisease = 'liver';
+let currentTeachQ = 0;
+let teachDoneQuestions = new Set();
+function loadTeachDisease(disease) {
+currentTeachDisease = disease;
+currentTeachQ = 0;
+teachDoneQuestions.clear();
+const data = teachData[disease];
+document.getElementById('teachSceneText').innerHTML = data.scene;
+document.getElementById('teachSceneMeta').textContent = data.sceneMeta;
+document.getElementById('teachTakeaway').innerHTML = data.takeaway;
+const list = document.getElementById('teachQuestionList');
+list.innerHTML = '';
+data.questions.forEach((q, i) => {
+const li = document.createElement('li');
+li.className = 'teach-question-item' + (i === 0 ? ' active' : '');
+li.innerHTML =       <div class="teach-question-step">         <span>教学问题 ${i + 1} / ${data.questions.length}</span>         <span class="stage">${q.type}</span>       </div>       <div class="teach-question-text">${q.q}</div>    ;
+li.addEventListener('click', () => selectTeachQ(i));
+list.appendChild(li);
+});
+renderCurrentTeachQ();
+updateTeachProgress();
+}
+function selectTeachQ(idx) {
+currentTeachQ = idx;
+document.querySelectorAll('#teachQuestionList .teach-question-item').forEach((el, i) => {
+el.classList.remove('active');
+if (i === idx) el.classList.add('active');
+if (teachDoneQuestions.has(i) && i !== idx) el.classList.add('done');
+});
+renderCurrentTeachQ();
+updateTeachProgress();
+}
+function renderCurrentTeachQ() {
+const data = teachData[currentTeachDisease];
+const q = data.questions[currentTeachQ];
+document.getElementById('teachQLabel').textContent = ⛯ 教学问题 ${currentTeachQ + 1} / ${data.questions.length};
+document.getElementById('teachQType').textContent = q.type;
+document.getElementById('teachQText').textContent = q.q;
+document.getElementById('teachQPrompt').innerHTML = q.prompt || '';
+document.getElementById('teachAnswer').value = '';
+updateWordCount();
+// 清空反馈
+['teachFeedbackRef', 'teachFeedbackComment', 'teachFeedbackWarn', 'teachFeedbackSummary'].forEach(id => {
+document.getElementById(id).classList.remove('show');
+});
+}
+function updateWordCount() {
+const val = document.getElementById('teachAnswer').value;
+document.getElementById('teachWordCount').textContent = ${val.length} 字;
+}
+function updateTeachProgress() {
+const total = teachData[currentTeachDisease].questions.length;
+const pct = ((currentTeachQ + 1) / total) * 100;
+document.getElementById('teachProgressFill').style.width = pct + '%';
+}
+function nextTeachQuestion() {
+const total = teachData[currentTeachDisease].questions.length;
+teachDoneQuestions.add(currentTeachQ);
+if (currentTeachQ < total - 1) {
+selectTeachQ(currentTeachQ + 1);
+} else {
+showTeachSummary();
+}
+}
+function prevTeachQuestion() {
+if (currentTeachQ > 0) selectTeachQ(currentTeachQ - 1);
+}
+function showTeachReference() {
+const q = teachData[currentTeachDisease].questions[currentTeachQ];
+document.getElementById('teachFeedbackRefText').innerHTML = q.ref;
+document.getElementById('teachFeedbackRef').classList.add('show');
+}
+function showTeachComment() {
+const q = teachData[currentTeachDisease].questions[currentTeachQ];
+document.getElementById('teachFeedbackCommentText').innerHTML = q.comment;
+document.getElementById('teachFeedbackComment').classList.add('show');
+}
+function showTeachWarn() {
+const q = teachData[currentTeachDisease].questions[currentTeachQ];
+document.getElementById('teachFeedbackWarnText').innerHTML = q.warn;
+document.getElementById('teachFeedbackWarn').classList.add('show');
+}
+function showTeachSummary() {
+document.getElementById('teachFeedbackSummaryText').innerHTML = teachData[currentTeachDisease].summary;
+document.getElementById('teachFeedbackSummary').classList.add('show');
+}
+function resetTeach() {
+loadTeachDisease(currentTeachDisease);
+}
+document.getElementById('teachDiseaseSelect').addEventListener('click', e => {
+if (e.target.classList.contains('teach-disease-btn')) {
+document.querySelectorAll('#teachDiseaseSelect .teach-disease-btn').forEach(b => b.classList.remove('active'));
+e.target.classList.add('active');
+loadTeachDisease(e.target.dataset.disease);
+}
+});
+loadTeachDisease('liver');
+/* ============ 病例模拟模块 ============ */
+let currentCaseStage = 0;
+function renderCaseStage() {
+const container = document.getElementById('caseStageContainer');
+container.innerHTML = '';
+for (let i = 0; i <= currentCaseStage && i < caseStages.length; i++) {
+const stage = caseStages[i];
+const block = document.createElement('div');
+block.className = 'case-stage-block';
+block.innerHTML =       <div class="case-stage-label">         <span class="stage-num">${i + 1}</span>         ${stage.label}       </div>       <div class="case-stage-content">${stage.content}</div>    ;
+container.appendChild(block);
+}
+// 更新进度条
+document.querySelectorAll('#caseProgress .case-step').forEach((step, idx) => {
+step.classList.remove('active', 'completed');
+if (idx < currentCaseStage) step.classList.add('completed');
+else if (idx === currentCaseStage) step.classList.add('active');
+});
+// 决策点显示
+if (currentCaseStage === 4) {
+showCaseDecision();
+} else {
+document.getElementById('caseDecision').style.display = 'none';
+document.getElementById('caseFeedback').classList.remove('show');
+}
+if (currentCaseStage >= caseStages.length - 1) {
+showCaseSummary();
+}
+}
+function showCaseDecision() {
+const decision = caseDecisions[0];
+document.getElementById('caseDecision').style.display = 'block';
+document.querySelector('#caseDecision .case-decision-title').innerHTML = '⌧ 决策点 · ' + decision.title;
+const optionsContainer = document.getElementById('caseDecisionOptions');
+optionsContainer.innerHTML = '';
+decision.options.forEach((opt, i) => {
+const div = document.createElement('div');
+div.className = 'case-decision-option';
+div.setAttribute('data-letter', opt.letter);
+div.textContent = opt.text;
+div.addEventListener('click', () => {
+document.querySelectorAll('.case-decision-option').forEach(o => {
+o.classList.remove('selected');
+});
+div.classList.add('selected');
+div.dataset.idx = i;
+});
+optionsContainer.appendChild(div);
+});
+}
+function submitCaseDecision() {
+const selected = document.querySelector('.case-decision-option.selected');
+if (!selected) {
+alert('请先选择一个处理方案');
+return;
+}
+const idx = parseInt(selected.dataset.idx);
+const decision = caseDecisions[0];
+document.querySelectorAll('.case-decision-option').forEach((el, i) => {
+el.classList.remove('selected');
+if (i === decision.correct) el.classList.add('correct');
+else if (i === idx && i !== decision.correct) el.classList.add('wrong');
+});
+document.getElementById('caseFeedbackText').innerHTML = decision.feedback;
+document.getElementById('caseFeedback').classList.add('show');
+}
+function showCaseStandard() {
+const decision = caseDecisions[0];
+document.querySelectorAll('.case-decision-option').forEach((el, i) => {
+if (i === decision.correct) el.classList.add('correct');
+});
+document.getElementById('caseFeedbackText').innerHTML = decision.feedback;
+document.getElementById('caseFeedback').classList.add('show');
+}
+function unlockNextStage() {
+if (currentCaseStage < caseStages.length - 1) {
+currentCaseStage++;
+document.getElementById('caseFeedback').classList.remove('show');
+renderCaseStage();
+setTimeout(() => {
+const container = document.getElementById('caseStageContainer');
+container.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}, 100);
+} else {
+document.querySelectorAll('#caseProgress .case-step').forEach(step => {
+step.classList.add('completed');
+step.classList.remove('active');
+});
+showCaseSummary();
+}
+}
+function showCaseSummary() {
+document.getElementById('caseFinalSummary').classList.add('show');
+}
+function enterCase() {
+currentCaseStage = 0;
+document.getElementById('caseFinalSummary').classList.remove('show');
+document.getElementById('caseFeedback').classList.remove('show');
+renderCaseStage();
+}
+function resetCase() {
+enterCase();
+}
+document.getElementById('caseDiseaseOptions').addEventListener('click', e => {
+if (e.target.classList.contains('case-filter-btn')) {
+document.querySelectorAll('#caseDiseaseOptions .case-filter-btn').forEach(b => b.classList.remove('active'));
+e.target.classList.add('active');
+document.getElementById('caseTitle').textContent = e.target.textContent.replace('·', ' · ');
+resetCase();
+}
+});
+document.getElementById('caseLevelOptions').addEventListener('click', e => {
+if (e.target.classList.contains('case-filter-btn')) {
+document.querySelectorAll('#caseLevelOptions .case-filter-btn').forEach(b => b.classList.remove('active'));
+e.target.classList.add('active');
+}
+});
+renderCaseStage();
+/* ============ 诊断推理模块 ============ */
+let currentReasonStep = 1;
+const totalReasonSteps = 7;
+function updateReasonCounter() {
+document.getElementById('reasonStepNum').textContent = currentReasonStep;
+}
+function nextReasonStep() {
+const currentEl = document.querySelector(.reason-step[data-step="${currentReasonStep}"]);
+if (currentReasonStep < totalReasonSteps) {
+currentEl.classList.remove('active');
+currentEl.classList.add('done');
+currentReasonStep++;
+const nextEl = document.querySelector(.reason-step[data-step="${currentReasonStep}"]);
+nextEl.classList.add('active');
+nextEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+} else {
+currentEl.classList.add('done');
+currentEl.classList.remove('active');
+alert('⊕ 您已完成全部七步推理!请查看右侧诊断推理反馈与处理原则。');
+}
+updateReasonCounter();
+}
+function showReasonHint() {
+const current = document.querySelector(.reason-step[data-step="${currentReasonStep}"] .reason-step-ref);
+if (current) {
+current.style.display = 'block';
+current.style.background = '#fff8e1';
+current.style.color = '#ef6c00';
+current.style.borderLeftColor = '#ef6c00';
+setTimeout(() => {
+if (!document.querySelector(.reason-step[data-step="${currentReasonStep}"]).classList.contains('done')) {
+current.style.display = 'none';
+current.style.background = '';
+current.style.color = '';
+current.style.borderLeftColor = '';
+}
+}, 4000);
+}
+}
+function submitReason() {
+alert('⊕ 您的推理已提交。请参考右侧"诊断推理反馈"了解评价结果,可继续下一步推理或查看完整推理链。');
+}
+function completeAllReason() {
+document.querySelectorAll('.reason-step').forEach(step => {
+step.classList.add('done');
+step.classList.remove('active');
+});
+currentReasonStep = totalReasonSteps;
+updateReasonCounter();
+}
+function resetReason() {
+document.querySelectorAll('.reason-step').forEach(step => {
+step.classList.remove('done', 'active');
+const input = step.querySelector('textarea');
+if (input) input.value = '';
+});
+document.querySelector('.reason-step[data-step="1"]').classList.add('active');
+currentReasonStep = 1;
+updateReasonCounter();
+}
+function startReason() {
+resetReason();
+document.querySelector('.reason-step[data-step="1"]').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+/* ============ 疾病知识库模块 ============ */
+function selectDisease(key) {
+document.querySelectorAll('#diseaseTabs .disease-tab').forEach(t => t.classList.remove('active'));
+document.querySelector(#diseaseTabs .disease-tab[data-disease="${key}"]).classList.add('active');
+renderDiseaseDetail(key);
+}
+function renderDiseaseDetail(key) {
+const d = libraryData[key];
+if (!d) return;
+const detail = document.getElementById('diseaseDetail');
+let html =     <div class="disease-header">       <div class="disease-header-left">         <div class="disease-name">           <span class="disease-name-prefix"></span>           ${d.name}         </div>         <div class="disease-en">${d.en}</div>         <div class="disease-key-tags">           ${d.tags.map(t =><span class="disease-key-tag">${t}</span>).join('')}         </div>       </div>       <div class="disease-quick-stats">         ${d.quickStats.map(s => 
+<div class="disease-quick-stat">
+<div class="disease-quick-stat-label">${s.label}</div>
+<div class="disease-quick-stat-val">${s.val}</div>
+</div>
+`).join('')}
+</div>
+</div>
+<div class="kb-highlight-row">
+  ${d.highlights.map(h => `
+    <div class="kb-highlight-card ${h.type === 'warn' ? 'warn' : h.type === 'success' ? 'success' : ''}">
+      <div class="kb-highlight-title">${h.title}</div>
+      <div class="kb-highlight-text">${h.text}</div>
+    </div>
+  `).join('')}
+</div>
+
+<div class="collapse-list">
+  ${d.sections.map((s, i) => `
+    <div class="collapse-section">
+      <div class="collapse-header ${i === 0 ? 'open' : ''}" onclick="toggleCollapse(this)">
+        <div class="collapse-header-left">
+          <div class="collapse-header-num">${i + 1}</div>
+          <span>${s.title}</span>
+        </div>
+        <span class="collapse-icon">▼</span>
+      </div>
+      <div class="collapse-body ${i === 0 ? 'open' : ''}">${s.content}</div>
+    </div>
+  `).join('')}
+</div>
+`;
+detail.innerHTML = html;
+}
+function toggleCollapse(header) {
+header.classList.toggle('open');
+const body = header.nextElementSibling;
+body.classList.toggle('open');
+}
+document.getElementById('diseaseTabs').addEventListener('click', e => {
+const tab = e.target.closest('.disease-tab');
+if (tab) selectDisease(tab.dataset.disease);
+});
+renderDiseaseDetail('liver');
+updateReasonCounter();
+</script>
+</body>
+</html>
